@@ -7,11 +7,11 @@ namespace StockApplication.Code
 {
     public class User
     {
-        private Guid id { get; set; }
-        private string username { get; set; }
+        public Guid id { get; set; }
+        public string username { get; set; }
 
-        private Stock[] ownedStocks { get; set; }
-        private float balance { get; set; }
+        public Stock[] ownedStocks { get; set; }
+        public float balance { get; set; }
         public User() : this(Guid.Empty, null, null, 0)
         {
 
@@ -20,8 +20,19 @@ namespace StockApplication.Code
         {
             this.id = id;
             this.username = username;
-            this.ownedStocks = ownedStocks;
+            if(ownedStocks != null)
+            {
+                this.ownedStocks = ownedStocks;
+            }
+            else
+            {
+                this.ownedStocks = new Stock[0];
+            }
             this.balance = balance;
+        }
+        public User clone()
+        {
+            return new User(id, username, ownedStocks, balance);
         }
     }
 }

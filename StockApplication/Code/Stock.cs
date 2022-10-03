@@ -9,7 +9,6 @@ namespace StockApplication.Code
     {
         public Guid id { get; set; }
         private int amount { get; set; }
-        private float value { get; set; }
         private Company company { get; set; }
         public Stock() : this(Guid.Empty, 0, 0, null)
         {
@@ -19,7 +18,6 @@ namespace StockApplication.Code
         {
             this.id = id;
             this.amount = amount;
-            this.value = value;
             this.company = company;
         }
         

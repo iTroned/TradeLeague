@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StockApplication.Code.DAL;
+using Microsoft.EntityFrameworkCore;
+using StockApplication.Code.Handlers;
 
 namespace StockApplication
 {
@@ -23,7 +26,9 @@ namespace StockApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddControllers();
+            services.AddDbContext<StockContext>(options => options.UseSqlite("Data Source=Stock.db"));
+            services.AddScoped<IStockRepository, StockRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,6 +37,7 @@ namespace StockApplication
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                DBInit.Initialize(app);
             }
             else
             {
@@ -49,7 +55,7 @@ namespace StockApplication
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }
