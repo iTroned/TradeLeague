@@ -1,5 +1,7 @@
 ﻿$(function () {
     getAllUsers();
+    //getAllCompanies();
+    
 });
 
 function getAllUsers() {
@@ -8,7 +10,7 @@ function getAllUsers() {
     });
 }
 function getAllCompanies() {
-    $.get("Stock/getAllCOmpanies", function (allCompanies) {
+    $.get("Stock/getAllCompanies", function (allCompanies) {
         formatCompanies(allCompanies);
     });
 }
@@ -29,6 +31,8 @@ function formatUsers(users) {
     }
     out += "</table>";
     $("#users").html(out);
+    let lol = "lol";
+    $("#companies").html(lol);
 }
 function formatCompanies(companies) {
     let out = "<table class='table table-striped'>" +
@@ -43,5 +47,5 @@ function formatCompanies(companies) {
             "</tr>";
     }
     out += "</table>";
-    $("#companies").html(out);
+    //$("#companies").html(out);
 }

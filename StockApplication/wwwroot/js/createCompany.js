@@ -1,4 +1,4 @@
-﻿function createUser() {
+﻿function createCompany() {
     const company = {
         name: $("#name").val()
     }
