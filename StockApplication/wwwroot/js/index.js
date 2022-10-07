@@ -1,7 +1,6 @@
 ﻿$(function () {
     getAllUsers();
-    //getAllCompanies();
-    
+    getAllCompanies();
 });
 
 function getAllUsers() {
@@ -31,8 +30,6 @@ function formatUsers(users) {
     }
     out += "</table>";
     $("#users").html(out);
-    let lol = "lol";
-    $("#companies").html(lol);
 }
 function formatCompanies(companies) {
     let out = "<table class='table table-striped'>" +
@@ -47,5 +44,5 @@ function formatCompanies(companies) {
             "</tr>";
     }
     out += "</table>";
-    //$("#companies").html(out);
+    $("#companies").html(out);
 }
