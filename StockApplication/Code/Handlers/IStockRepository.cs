@@ -15,5 +15,7 @@ namespace StockApplication.Code.Handlers
         Task<bool> createCompany(string name);
         Task<Company> getCompanyByID(Guid id);
         Task<List<Company>> getAllCompanies();
+        Task<bool> deleteUser(string id);
+        Task<bool> deleteCompany(string id);
     }
 }

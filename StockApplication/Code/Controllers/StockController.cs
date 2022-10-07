@@ -53,6 +53,16 @@ namespace StockApplication.Controllers
         {
             return await _db.getAllCompanies();
         }
+        public async Task<bool> deleteUser(string id)
+        {
+            return await _db.deleteUser(id);
+        }
+        public async Task<bool> deleteCompany(string id)
+        {
+            return await _db.deleteCompany(id);
+        }
+
+
 
     }
 }

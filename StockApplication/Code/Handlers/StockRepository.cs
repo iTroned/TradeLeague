@@ -83,6 +83,19 @@ namespace StockApplication.Code.Handlers
             
           
         }
+        public async Task<bool> deleteUser(string id)
+        {
+            try
+            {
+                _db.Remove(await getUserByID(Guid.Parse(id)));
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public async Task<bool> checkUsername(string username)
         {
             User[] users = await _db.Users.Where(p => p.username == username).ToArrayAsync();
@@ -121,6 +134,19 @@ namespace StockApplication.Code.Handlers
                 Guid id = Guid.NewGuid();
                 Company company = new Company(id, name, startValue);
                 _db.Companies.Add(company);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<bool> deleteCompany(string id)
+        {
+            try
+            {
+                _db.Remove(await getCompanyByID(Guid.Parse(id)));
                 await _db.SaveChangesAsync();
                 return true;
             }
