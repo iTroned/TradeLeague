@@ -12,6 +12,7 @@ namespace StockApplication.Code.Handlers
     {
         private readonly StockContext _db;
         private float startBalance = 100.0F;
+        private float startValue = 10.0F;
         public StockRepository(StockContext db)
         {
             _db = db;
@@ -104,18 +105,40 @@ namespace StockApplication.Code.Handlers
             Guid id = Guid.NewGuid();
             return id;
         }
-        public Stock getCompanyByID(Guid id)
+        public async Task<Company> getCompanyByID(Guid id)
         {
-            return new Stock();
+            Company company = await _db.Companies.FindAsync(id);
+            return company;
         }
         public bool updateCompany(Guid id, Company company)
         {
             return true;
         }
-        public Guid createCompany(Company company)
+        public async Task<bool> createCompany(string name)
         {
-            Guid id = Guid.NewGuid();
-            return id;
+            try
+            {
+                Guid id = Guid.NewGuid();
+                Company company = new Company(id, name, startValue);
+                _db.Companies.Add(company);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<List<Company>> getAllCompanies()
+        {
+            try
+            {
+                return await _db.Companies.Select(u => u.clone()).ToListAsync();
+            }
+            catch
+            {
+                return null;
+            }
         }
         public float getBalanceForUser(User user)
         {

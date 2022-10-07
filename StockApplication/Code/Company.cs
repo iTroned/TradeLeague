@@ -20,6 +20,10 @@ namespace StockApplication.Code
             this.id = id;
             this.value = value;
         }
+        public Company clone()
+        {
+            return new Company(id, name, value);
+        }
 
     }
 }

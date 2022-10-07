@@ -1,0 +1,25 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Et skjema</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <script src="js/createCompany.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Create company</h1>
+        <form class="form">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="name" required autocomplete="off" />
+            </div>
+            <div class="form-group">
+                <input type="button" id="reg" value="Create" onClick="createCompany()" class="btn btn-primary" />
+            </div>
+            <div id="error" style="color: red"></div>
+        </form>
+    </div>
+</body>
+</html>

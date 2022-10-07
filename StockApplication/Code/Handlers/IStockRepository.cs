@@ -12,5 +12,8 @@ namespace StockApplication.Code.Handlers
         Task<bool> updateUser(Guid id, string username);
         Task<bool> createUser(string username);
         Task<bool> checkUsername(string username);
+        Task<bool> createCompany(string name);
+        Task<Company> getCompanyByID(Guid id);
+        Task<List<Company>> getAllCompanies();
     }
 }

@@ -7,6 +7,11 @@ function getAllUsers() {
         formatUsers(allUsers);
     });
 }
+function getAllCompanies() {
+    $.get("Stock/getAllCOmpanies", function (allCompanies) {
+        formatCompanies(allCompanies);
+    });
+}
 
 function formatUsers(users) {
     let out = "<table class='table table-striped'>" +
@@ -24,4 +29,19 @@ function formatUsers(users) {
     }
     out += "</table>";
     $("#users").html(out);
+}
+function formatCompanies(companies) {
+    let out = "<table class='table table-striped'>" +
+        "<tr>" +
+        "<th>Name</th><th>ID</th><th>Value</th>" +
+        "</tr>";
+    for (let company of companies) {
+        out += "<tr>" +
+            "<td>" + company.name + "</td>" +
+            "<td>" + company.id + "</td>" +
+            "<td>" + company.value + "</td>" +
+            "</tr>";
+    }
+    out += "</table>";
+    $("#companies").html(out);
 }

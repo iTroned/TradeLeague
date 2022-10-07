@@ -41,6 +41,18 @@ namespace StockApplication.Controllers
         {
             return await _db.checkUsername(username);
         }
+        public async Task<bool> createCompany(string name)
+        {
+            return await _db.createCompany(name);
+        }
+        public async Task<Company> getCompanyByID(Guid id)
+        {
+            return await _db.getCompanyByID(id);
+        }
+        public async Task<List<Company>> getAllCompanies()
+        {
+            return await _db.getAllCompanies();
+        }
 
     }
 }
