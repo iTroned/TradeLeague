@@ -20,7 +20,7 @@ function editUser() {
     };
     $.post("Stock/updateUser", user, function (OK) {
         if (OK) {
-            window.location.href = 'index.html';
+            window.location.href = 'home.html';
         }
         else {
             $("#feil").html("Feil i db - prøv igjen senere");
