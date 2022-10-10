@@ -2,15 +2,17 @@
 var type = "";
 
 $(function () {
-    id = alert($.session.get("tempID")); 
-    type = alert($.session.get("tempType"));
-    $.session.remove("tempID");
-    $.session.remove("tempType");
-    showItem();
+    const string = window.location.search;
+    const param = new URLSearchParams(string);
+    id = param.get('id'); 
+    type = param.get('type'); 
+    
+    showItem(id, type);
 });
-function showItem() {
+function showItem(id, type) {
     if (type === "user") {
-        $.get("Stock/getUserByID?" + id, function (user) {
+        const url = "Stock/getUserByID?id=" + id;
+        $.get(url, function (user) {
             formatUser(user);
         });
     }
@@ -20,7 +22,7 @@ function showItem() {
         });
     }
     else {
-        window.location.href("index.html");
+        window.location.href = "index.html";
     }
 }
 function formatUser(user) {
@@ -49,16 +51,24 @@ function formatCompany(company) {
 }
 function deleteItem() {
     if (type === "user") {
-        $.get("Stock/deleteUser?" + id, function (OK) {
+        $.get("Stock/deleteUser?id=" + id, function (OK) {
             if (OK) {
+                window.location.href = "index.html";
+            }
+            else {
 
             }
         });
     }
     else if (type === "company") {
-        $.get("Stock/deleteCompany?" + id, function (company) {
-    
+        $.get("Stock/deleteCompany?id=" + id, function (OK) {
+            if (OK) {
+                window.location.href = "index.html";
+            }
+            else{
+
+            }
         });
     }
-    window.location.href("index.html");
+    
 }
