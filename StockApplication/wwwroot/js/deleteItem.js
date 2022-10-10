@@ -48,5 +48,17 @@ function formatCompany(company) {
     $("#deleting").html(out);
 }
 function deleteItem() {
+    if (type === "user") {
+        $.get("Stock/deleteUser?" + id, function (OK) {
+            if (OK) {
 
+            }
+        });
+    }
+    else if (type === "company") {
+        $.get("Stock/deleteCompany?" + id, function (company) {
+    
+        });
+    }
+    window.location.href("index.html");
 }
