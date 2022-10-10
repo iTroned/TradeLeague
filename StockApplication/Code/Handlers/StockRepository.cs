@@ -42,16 +42,28 @@ namespace StockApplication.Code.Handlers
                 return null;
             }
         }
-        public async Task<bool> updateUser(Guid id, string username)
+        public async Task<bool> updateUser(User editUser)
         {
             try
             {
-                if (!(await checkUsername(username)))
+                User user = await _db.Users.FindAsync(editUser.id);
+                if (user.username != editUser.username)
                 {
-                    return false;
+                    if (!(await checkUsername(editUser.username)))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        user.username = editUser.username;
+                    }
                 }
-                User user = await _db.Users.FindAsync(id);
-                user.username = username;
+                else
+                {
+                    user.username = editUser.username;
+                }
+                user.balance = editUser.balance;
+                user.ownedStocks = editUser.ownedStocks;
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -59,7 +71,6 @@ namespace StockApplication.Code.Handlers
             {
                 return false;
             }
-            
         }
         public async Task<bool> createUser(string username)
         {
