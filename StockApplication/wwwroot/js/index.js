@@ -24,7 +24,7 @@ function formatUsers(users) {
             "<td>" + user.username + "</td>" +
             "<td>" + user.id + "</td>" +
             "<td>" + user.balance + "</td>" +
-            //"<td> <a class='btn btn-primary' href='endre.html?id=" + kunde.id + "'>Endre</a></td>" +
+            "<td> <a class='btn btn-primary' href='endre.html?id=" + user.id + "'>Endre</a></td>" +
             //"<td> <button class='btn btn-danger' onclick='slettKunde(" + kunde.id + ")'>Slett</button></td>" +
             "</tr>";
     }

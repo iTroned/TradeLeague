@@ -29,9 +29,9 @@ namespace StockApplication.Controllers
         {
             return await _db.getAllUsers();
         }
-        public async Task<bool> updateUser(Guid id, string username)
+        public async Task<bool> updateUser(User editUser)
         {
-            return await _db.updateUser(id, username);
+            return await _db.updateUser(editUser);
         }
         public async Task<bool> createUser(string username)
         {
