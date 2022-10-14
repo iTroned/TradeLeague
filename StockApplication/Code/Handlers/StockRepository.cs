@@ -24,7 +24,7 @@ namespace StockApplication.Code.Handlers
             random = new Random();
             Timer _timer = new Timer(async (e) =>
             {
-                await updateValues();
+                //await updateValues();
             }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
         }
         public async Task<User> getUserByID(Guid id)
