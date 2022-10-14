@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+
 
 
 namespace StockApplication.Code.Handlers
@@ -36,7 +35,7 @@ namespace StockApplication.Code.Handlers
         public async Task<User> getUserByUsername(string username)
         {
             User[] users = await _db.Users.Where(p => p.username == username).ToArrayAsync();
-            if(users.Length == 1)
+            if (users.Length == 1)
             {
                 return users[0];
             }
@@ -87,7 +86,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                if(!(await checkUsername(username)) || username == null || username.Equals(""))
+                if (!(await checkUsername(username)) || username == null || username.Equals(""))
                 {
                     Console.WriteLine("Username taken");
                     return false;
@@ -102,8 +101,8 @@ namespace StockApplication.Code.Handlers
             {
                 return false;
             }
-            
-          
+
+
         }
         public async Task<bool> deleteUser(string id)
         {
@@ -217,7 +216,7 @@ namespace StockApplication.Code.Handlers
         {
             return 0;
         }
-       
+
         public bool setBalanceForUser(User user, float balance)
         {
             return true;
@@ -225,7 +224,7 @@ namespace StockApplication.Code.Handlers
         public bool removeBalanceFromUser(User user, float value)
         {
             float currentBalance = getBalanceForUser(user);
-            if(currentBalance >= value)
+            if (currentBalance >= value)
             {
                 setBalanceForUser(user, currentBalance - value);
                 return true;
@@ -240,11 +239,11 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                foreach(Company company in await _db.Companies.Select(u => u.clone()).ToListAsync())
+                foreach (Company company in await _db.Companies.Select(u => u.clone()).ToListAsync())
                 {
-                    if(random.Next(2) == 0)
+                    if (random.Next(2) == 0)
                     {
-                        await updateValueOnCompany(company.id, (float) (company.value * (random.Next(800, 1200)) / 1000));
+                        await updateValueOnCompany(company.id, (float)(company.value * (random.Next(800, 1200)) / 1000));
                     }
                 }
                 return true;
@@ -254,15 +253,6 @@ namespace StockApplication.Code.Handlers
                 return false;
             }
         }
-        private const string _currentUser = null;
-        public void setCurrentUser(string id)
-        {
-            .SetString(_currentUser, id);
-        }
-        public string getCurrentUser()
-        {
-            return "";
-        }
-        public 
+        
     }
 }

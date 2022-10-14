@@ -17,7 +17,5 @@ namespace StockApplication.Code.Handlers
         Task<List<Company>> getAllCompanies();
         Task<bool> deleteUser(string id);
         Task<bool> deleteCompany(string id);
-        void setCurrentUser(string id);
-        string getCurrentUser();
     }
 }

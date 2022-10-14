@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using StockApplication.Code;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace StockApplication.Controllers
 {
@@ -62,13 +63,22 @@ namespace StockApplication.Controllers
             return await _db.deleteCompany(id);
         }
 
-        public async Task<bool> setCurrentUser(string id)
+       
+
+
+        private const string SessionKeyUser = null;
+        public void setCurrentUser(string id)
         {
-            return await _db.setCurrentUser(id);
+            HttpContext.Session.SetString(SessionKeyUser, id);
         }
-        public async Task<string> getCurrentUser()
+
+        public string getCurrentUser()
         {
-            return await _db.getCurrentUser();
+            return HttpContext.Session.GetString(SessionKeyUser);
+        }
+        public void removeCurrentUser()
+        {
+            HttpContext.Session.SetString(SessionKeyUser, null);
         }
 
     }
