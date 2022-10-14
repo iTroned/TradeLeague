@@ -72,13 +72,23 @@ namespace StockApplication.Controllers
             HttpContext.Session.SetString(SessionKeyUser, id);
         }
 
-        public string getCurrentUserID()
+        public async Task<string> getCurrentUserID()
+
         {
-            return HttpContext.Session.GetString(SessionKeyUser);
+            string cur = HttpContext.Session.GetString(SessionKeyUser);
+            if (cur != "")
+            {
+                return cur;
+            }
+            else
+            {
+                User admin = await _db.getUserByUsername("admin");
+                return admin.id.ToString();
+            }
         }
         public async Task<User> getCurrentUser()
         {
-            return await _db.getUserByID(Guid.Parse(getCurrentUserID()));
+            return await _db.getUserByID(Guid.Parse(await getCurrentUserID()));
         }
         public void removeCurrentUser()
         {
