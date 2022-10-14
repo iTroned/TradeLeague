@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace StockApplication.Code.Handlers
 {
@@ -13,9 +14,16 @@ namespace StockApplication.Code.Handlers
         private readonly StockContext _db;
         private float startBalance = 100.0F;
         private float startValue = 10.0F;
+        private Random random;
         public StockRepository(StockContext db)
         {
             _db = db;
+
+            random = new Random();
+            Timer _timer = new Timer(async (e) =>
+            {
+                await updateValues();
+            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
         }
         public async Task<User> getUserByID(Guid id)
         {
@@ -134,10 +142,22 @@ namespace StockApplication.Code.Handlers
             Company company = await _db.Companies.FindAsync(id);
             return company;
         }
-        public bool updateCompany(Guid id, Company company)
+        /*public async Task<bool> updateCompany(Company editCompany)
         {
-            return true;
-        }
+            try
+            {
+                Company company = await _db.Companies.FindAsync(editCompany.id);
+                
+                company.value = editUser.balance;
+                user.ownedStocks = editUser.ownedStocks;
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }*/
         public async Task<bool> createCompany(string name)
         {
             try
@@ -146,6 +166,19 @@ namespace StockApplication.Code.Handlers
                 Company company = new Company(id, name, startValue);
                 _db.Companies.Add(company);
                 await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<bool> updateValueOnCompany(Guid id, float value)
+        {
+            try
+            {
+                Company company = await _db.Companies.FindAsync(id);
+                company.value = value;
                 return true;
             }
             catch
@@ -199,6 +232,24 @@ namespace StockApplication.Code.Handlers
         public bool removeStockFromUser(User user, Stock stock, int amount)
         {
             return false;
+        }
+        public async Task<bool> updateValues()
+        {
+            try
+            {
+                foreach(Company company in await _db.Companies.Select(u => u.clone()).ToListAsync())
+                {
+                    if(random.Next(2) == 0)
+                    {
+                        await updateValueOnCompany(company.id, (float) (company.value * (random.Next(8, 12)) / 10));
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using StockApplication.Code.DAL;
 using Microsoft.EntityFrameworkCore;
 using StockApplication.Code.Handlers;
+using StockApplication.Code;
 
 namespace StockApplication
 {
@@ -29,6 +30,7 @@ namespace StockApplication
             services.AddControllers();
             services.AddDbContext<StockContext>(options => options.UseSqlite("Data Source=Stock.db"));
             services.AddScoped<IStockRepository, StockRepository>();
+            services.AddHostedService<ValueUpdater>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
