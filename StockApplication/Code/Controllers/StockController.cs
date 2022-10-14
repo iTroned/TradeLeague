@@ -66,7 +66,7 @@ namespace StockApplication.Controllers
        
 
 
-        private const string SessionKeyUser = null;
+        private const string SessionKeyUser = "_currentUser";
         public void setCurrentUser(string id)
         {
             HttpContext.Session.SetString(SessionKeyUser, id);
@@ -78,7 +78,7 @@ namespace StockApplication.Controllers
         }
         public void removeCurrentUser()
         {
-            HttpContext.Session.SetString(SessionKeyUser, null);
+            HttpContext.Session.SetString(SessionKeyUser, "");
         }
 
     }
