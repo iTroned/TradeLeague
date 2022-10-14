@@ -1,9 +1,7 @@
 ﻿$(function () {
-    // hent kunden med kunde-id fra url og vis denne i skjemaet
 
-    const id = window.location.search.substring(1);
-    const url = "Stock/getUserByID?" + id;
-        $.get(url, function (user) {
+
+    $.get("Stock/getCurrentUser", function (user) {
             $("#id").val(user.id); // må ha med id inn skjemaet, hidden i html
             $("#username").val(user.username);
             $("#balance").val(user.balance);
