@@ -31,6 +31,13 @@ namespace StockApplication
             services.AddDbContext<StockContext>(options => options.UseSqlite("Data Source=Stock.db"));
             services.AddScoped<IStockRepository, StockRepository>();
             services.AddHostedService<ValueUpdater>();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".AdventureWorks.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(7200); // 30 minutter
+                options.Cookie.IsEssential = true;
+            });
+            services.AddDistributedMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +59,7 @@ namespace StockApplication
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 

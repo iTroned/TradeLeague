@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace StockApplication.Code.Handlers
 {
@@ -241,7 +244,7 @@ namespace StockApplication.Code.Handlers
                 {
                     if(random.Next(2) == 0)
                     {
-                        await updateValueOnCompany(company.id, (float) (company.value * (random.Next(8, 12)) / 10));
+                        await updateValueOnCompany(company.id, (float) (company.value * (random.Next(800, 1200)) / 1000));
                     }
                 }
                 return true;
@@ -251,5 +254,15 @@ namespace StockApplication.Code.Handlers
                 return false;
             }
         }
+        private const string _currentUser = null;
+        public void setCurrentUser(string id)
+        {
+            .SetString(_currentUser, id);
+        }
+        public string getCurrentUser()
+        {
+            return "";
+        }
+        public 
     }
 }

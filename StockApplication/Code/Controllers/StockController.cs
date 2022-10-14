@@ -17,9 +17,9 @@ namespace StockApplication.Controllers
         {
             _db = db;
         }
-        public async Task<User> getUserByID(Guid id)
+        public async Task<User> getUserByID(string id)
         {
-            return await _db.getUserByID(id);
+            return await _db.getUserByID(Guid.Parse(id));
         }
         public async Task<User> getUserByUsername(string username)
         {
@@ -45,9 +45,9 @@ namespace StockApplication.Controllers
         {
             return await _db.createCompany(name);
         }
-        public async Task<Company> getCompanyByID(Guid id)
+        public async Task<Company> getCompanyByID(string id)
         {
-            return await _db.getCompanyByID(id);
+            return await _db.getCompanyByID(Guid.Parse(id));
         }
         public async Task<List<Company>> getAllCompanies()
         {
@@ -62,7 +62,14 @@ namespace StockApplication.Controllers
             return await _db.deleteCompany(id);
         }
 
-
+        public async Task<bool> setCurrentUser(string id)
+        {
+            return await _db.setCurrentUser(id);
+        }
+        public async Task<string> getCurrentUser()
+        {
+            return await _db.getCurrentUser();
+        }
 
     }
 }
