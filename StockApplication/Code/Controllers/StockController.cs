@@ -76,13 +76,14 @@ namespace StockApplication.Controllers
 
         {
             string cur = HttpContext.Session.GetString(SessionKeyUser);
-            if (cur != "")
+            if (cur != "" && cur != null)
             {
                 return cur;
             }
             else
             {
                 User admin = await _db.getUserByUsername("admin");
+                setCurrentUser(admin.id.ToString());
                 return admin.id.ToString();
             }
         }
@@ -93,6 +94,14 @@ namespace StockApplication.Controllers
         public void removeCurrentUser()
         {
             HttpContext.Session.SetString(SessionKeyUser, "");
+        }
+        public void setCustomSession(string sessionName, string value)
+        {
+            HttpContext.Session.SetString(sessionName, value);
+        }
+        public string getCustomSession(string sessionName)
+        {
+            return HttpContext.Session.GetString(sessionName);
         }
 
     }
