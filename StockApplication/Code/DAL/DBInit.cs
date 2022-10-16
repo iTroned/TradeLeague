@@ -40,7 +40,7 @@ namespace StockApplication.Code.DAL
             double[] randomArray = new double[10];
             for (int i = 0; i < randomArray.Length - 1; ++i)
             {
-                randomArray[i] = (random.Next(1, 100));
+                randomArray[i] = (start * (random.Next(800, 1200)) / 1000);
             }
             randomArray[randomArray.Length - 1] = start;
 

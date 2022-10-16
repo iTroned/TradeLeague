@@ -170,11 +170,11 @@ namespace StockApplication.Code.Handlers
                 Guid id = Guid.NewGuid();
                 float[] startArray = new float[10];
                 Company company = new Company(id, name, startValue, startValues);
-                for(int i = 0; i < startArray.Length - 1; ++i)
+                for (int i = 0; i < startArray.Length - 1; ++i)
                 {
                     startArray[i] = (company.value * (random.Next(800, 1200)) / 1000);
                 }
-                startArray = startArray.Append(company.value).ToArray();
+                startArray[startArray.Length - 1] = company.value; 
                 company.values = JsonConvert.SerializeObject(startArray);
                 _db.Companies.Add(company);
                 await _db.SaveChangesAsync();
