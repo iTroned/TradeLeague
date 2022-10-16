@@ -5,48 +5,34 @@
 function getCurrentUser() {
     $.get("Stock/getCurrentUser", function (user) {
         formatUser(user);
+        formatBalance(user);
+        formatStock(user);
     });
 }
 
-function getCurrentUSer() {
+function formatUser(user) {
+    let out = "Welcome to your profile, " + user.username;
+    $("#name").html(out);
+
+}
+
+function formatBalance(user) {
+    let out = " Your current balance is: " + user.balance;
+    $("#balance").html(out);
+
+}
+
+function formatStock(user) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Username</th><th>ID</th><th>Balance</th>" +
+        "<th>Stock name</th><th>(Shares)</th>" +
         "</tr>";
-    for (let user of users) {
-        out += "<tr>" +
-            "<td>" + user.username + "</td>" +
-            "<td>" + user.id + "</td>" +
-            "<td>" + user.balance + "</td>" +
-            "</tr>";
-    }
-    out += "</table>";
-    $("#user").html(out);
-}
-
-$(function () {
-    getAllUsers();
-    getAllCompanies();
-});
-
-function getAllUsers() {
-    $.get("Stock/getAllUsers", function (allUsers) {
-        formatUsers(allUsers);
-    });
-}
-
-function formatUsers(users) {
-    let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Username</th><th>ID</th><th>Balance</th>" +
-        "</tr>";
-    for (let user of users) {
-        out += "<tr>" +
-            "<td>" + user.username + "</td>" +
-            "<td>" + user.id + "</td>" +
-            "<td>" + user.balance + "</td>" +
+            "<td>" + user.ownedStock + "</td>" +
+            //"<td>" + user.stockShares + "</td>" +
             "</tr>";
-    }
-    out += "</table>";
-    $("#users").html(out);
+    
+    $("#ownedstock").html(out);
+
 }
+
