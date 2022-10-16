@@ -5,7 +5,8 @@
     <title>Home</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    <script src="js/index.js"></script>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/profilepage.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -17,12 +18,17 @@
                 <li class="active"><a href="index.html">Home</a></li>
                 <li><a href="createUser.html">Create User</a></li>
                 <li><a href="createCompany.html">Create Company</a></li>
+                <li><a href="swappage.html">Swap account</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="myprofile.html"><span class="glyphicon glyphicon-user"></span>Profile</a></li>
+                <li class=""><a href="profilepage.html"><span class="glyphicon glyphicon-user"></span>    Profile</a></li>
             </ul>
         </div>
     </nav>
+    <div class="container">
+        <h1>Welcome to your profile,  </h1>
+        <div id="username"></div>
+    </div>
     <div class="container">
         <h1>Your wallet</h1>
         <div id="users"></div>
