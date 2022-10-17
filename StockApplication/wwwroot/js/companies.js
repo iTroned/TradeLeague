@@ -9,7 +9,7 @@ function getAllCompanies() {
 }
 
 function formatCompanies(companies) {
-    let out = "<table class='table table-striped'>" +
+    let out = "<table class='table table-striped' id='table'>" +
         "<tr>" +
         "<th>Name</th><th>ID</th><th>Value</th>" +
         "</tr>";
@@ -22,4 +22,25 @@ function formatCompanies(companies) {
     }
     out += "</table>";
     $("#companies").html(out);
+}
+
+//function from w3schools: https://www.w3schools.com/howto/howto_js_filter_table.asp
+function search() {
+    var input = document.getElementById("searchbar");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("table");
+    var tr = table.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            }
+            else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
 }
