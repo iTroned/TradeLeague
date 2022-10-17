@@ -1,16 +1,14 @@
 ﻿$(function () {
-    const id = window.location.search.substring(1);
-    const url = "Stock/getCompanyByID?" + id;
-    
-
-    $.get(url, function (company) {
+    getCompany();
+});
+function getCompany() {
+    $.get("Stock/getCurrentCompany", function (company) {
         $("#name").html(company.name);
         company.values = JSON.parse(company.values);
         chart(company);
         formatCompany(company);
     });
-
-});
+}
 
 function chart(company) {
     const ctx = document.getElementById('companyChart').getContext('2d');

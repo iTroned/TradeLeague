@@ -15,13 +15,21 @@ function formatCompanies(companies) {
         "</tr>";
     for (let company of companies) {
         out += "<tr>" +
-            "<td><a href='company.html?id="+company.id+"'>" + company.name + "</td>" +
+            "<td>" + '<a onclick="goToCompany(\'' + company.id + '\')">' + company.name + "</a></td>" +
             "<td>" + company.id + "</td>" +
             "<td>" + company.value + "</td>" +
             "</tr>";
     }
     out += "</table>";
     $("#companies").html(out);
+}
+
+function goToCompany(id) {
+    $.get("Stock/setCurrentCompany?id=" + id, function (OK) {
+        if (OK) {
+            window.location.href = "company.html";
+        }
+    });
 }
 
 //function from w3schools: https://www.w3schools.com/howto/howto_js_filter_table.asp

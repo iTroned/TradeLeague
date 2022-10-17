@@ -63,9 +63,25 @@ namespace StockApplication.Controllers
             return await _db.deleteCompany(id);
         }
 
-       
+        private const string SessionKeyCompany = "_currentCompany";
+        public async Task<bool> setCurrentCompany(string id)
+        {
+            HttpContext.Session.SetString(SessionKeyCompany, id);
+            return await getCurrentCompany() != null;
+        }
 
-
+        public string getCurrentCompanyID()
+        {
+            return HttpContext.Session.GetString(SessionKeyCompany);
+        }
+        public async Task<Company> getCurrentCompany()
+        {
+            return await _db.getCompanyByID(Guid.Parse(getCurrentCompanyID()));
+        }
+        public void removeCurrentCompany()
+        {
+            HttpContext.Session.SetString(SessionKeyCompany, "");
+        }
         private const string SessionKeyUser = "_currentUser";
         public async Task<User> setCurrentUser(string id)
         {
@@ -84,7 +100,7 @@ namespace StockApplication.Controllers
             else
             {
                 User admin = await _db.getUserByUsername("admin");
-                setCurrentUser(admin.id.ToString());
+                await setCurrentUser(admin.id.ToString());
                 return admin.id.ToString();
             }
         }
@@ -103,6 +119,15 @@ namespace StockApplication.Controllers
         public string getCustomSession(string sessionName)
         {
             return HttpContext.Session.GetString(sessionName);
+        }
+
+        public async Task<bool> buyStock(string userID, string companyID, int amount)
+        {
+            return await _db.tryToBuyStockForUser(userID, companyID, amount);
+        }
+        public async Task<bool> sellStock(string userID, string companyID, int amount)
+        {
+            return await _db.tryToSellStockForUser(userID, companyID, amount);
         }
 
     }
