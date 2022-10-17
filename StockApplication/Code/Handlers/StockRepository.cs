@@ -41,11 +41,41 @@ namespace StockApplication.Code.Handlers
                 {
                     return false;
                 }
-                if (await addStockToUser(user, company, amount) && await removeBalanceFromUser(user.id, totalPrice))
+                if(!(await removeBalanceFromUser(user, totalPrice)))
                 {
-                    return true;
+                    return false;
                 }
+                if(!(await addStockToUser(user, company, amount)))
+                {
+                    //If something went wrong when adding the stock, make sure the user gets reimbursed
+                    await addBalanceToUser(user, totalPrice);
+                    return false;
+                }
+                return true;
+            }
+            catch
+            {
                 return false;
+            }
+        }
+        public async Task<bool> tryToSellStockForUser(string userID, string companyID, int amount)
+        {
+            try
+            {
+                User user = await getUserByID(Guid.Parse(userID));
+                Company company = await getCompanyByID(Guid.Parse(companyID));
+                Stock stock = await getStockWithUserAndCompany(user, company);
+                if(stock == null || stock.amount < amount)
+                {
+                    return false;
+                }
+                float totalPrice = company.value * amount;
+                if(!(await removeStockFromUser(user, company, amount)))
+                {
+                    return false;
+                }
+                await addBalanceToUser(user, totalPrice);
+                return true;
             }
             catch
             {
@@ -236,11 +266,10 @@ namespace StockApplication.Code.Handlers
             return user.balance;
         }
 
-        public async Task<bool> setBalanceForUser(Guid id, float balance)
+        public async Task<bool> setBalanceForUser(User user, float balance)
         {
             try
             {
-                User user = await getUserByID(id);
                 user.balance = balance;
                 await _db.SaveChangesAsync();
                 return true;
@@ -268,15 +297,36 @@ namespace StockApplication.Code.Handlers
                 return false;
             }
         }
-        public async Task<bool> removeBalanceFromUser(Guid id, float value)
+        public async Task<bool> addBalanceToUser(User user, float value)
         {
-            float currentBalance = await getBalanceForUser(id);
-            if (currentBalance >= value)
+            try
             {
-                await setBalanceForUser(id, currentBalance - value);
+                user.balance += value;
+                await _db.SaveChangesAsync();
                 return true;
             }
-            return false;
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<bool> removeBalanceFromUser(User user, float value)
+        {
+            try
+            {
+                float currentBalance = await getBalanceForUser(user.id);
+                if (currentBalance >= value)
+                {
+                    await setBalanceForUser(user, currentBalance - value);
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+            
         }
         public async Task<bool> userHasEnoughBalance(User user, float value)
         {
