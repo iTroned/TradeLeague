@@ -121,13 +121,13 @@ namespace StockApplication.Controllers
             return HttpContext.Session.GetString(sessionName);
         }
 
-        public async Task<bool> buyStock(string userID, string companyID, int amount)
+        public async Task<bool> buyStock(int amount)
         {
-            return await _db.tryToBuyStockForUser(userID, companyID, amount);
+            return await _db.tryToBuyStockForUser(await getCurrentUserID(), getCurrentCompanyID(), amount);
         }
-        public async Task<bool> sellStock(string userID, string companyID, int amount)
+        public async Task<bool> sellStock(int amount)
         {
-            return await _db.tryToSellStockForUser(userID, companyID, amount);
+            return await _db.tryToSellStockForUser(await getCurrentUserID(), getCurrentCompanyID(), amount);
         }
 
     }

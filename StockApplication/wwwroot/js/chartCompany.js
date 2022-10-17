@@ -45,4 +45,16 @@ function formatCompany(company) {
 
     $("#information").html(out);
 }
+function buyStock() {
+    const amount = $("#amount").val();
+    $.get("Stock/buyStock?amount=" + amount, function (OK) {
+        
+    });
+}
+function sellStock() {
+    const amount = $("#amount").val();
+    $.get("Stock/sellStock?amount=" + amount, function (OK) {
+
+    });
+}
 

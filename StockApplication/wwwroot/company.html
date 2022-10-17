@@ -29,6 +29,13 @@
      
     <div class="container">
         <h1 id="name"></h1>
+        <div class="container">
+            <input type="number" id="amount" min="1" max="100" value="1" />
+            <button class="btn btn-success" id="buy" onclick="buyStock()">Buy</button>
+            <button class="btn btn-danger" id="sell">Sell</button>
+
+        </div>
+
         <div id="chart">
             <canvas id="companyChart"></canvas>
         </div>
