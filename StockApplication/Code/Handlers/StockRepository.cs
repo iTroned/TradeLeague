@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using Newtonsoft.Json;
 
 
 
@@ -17,6 +18,7 @@ namespace StockApplication.Code.Handlers
         private float startBalance = 100.0F;
         private float startValue = 10.0F;
         private Random random;
+        private string startValues;
         public StockRepository(StockContext db)
         {
             _db = db;
@@ -173,7 +175,14 @@ namespace StockApplication.Code.Handlers
             try
             {
                 Guid id = Guid.NewGuid();
-                Company company = new Company(id, name, startValue);
+                float[] startArray = new float[10];
+                Company company = new Company(id, name, startValue, startValues);
+                for (int i = 0; i < startArray.Length -1; ++i)
+                {
+                    startArray[i] = (company.value * (random.Next(800, 1200)) / 1000);
+                }
+                startArray[startArray.Length - 1] = company.value;
+                company.values = JsonConvert.SerializeObject(startArray);
                 _db.CompanySet.Add(company);
                 await _db.SaveChangesAsync();
                 return true;
