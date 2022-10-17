@@ -8,8 +8,9 @@ namespace StockApplication.Code.DAL
         {
             Database.EnsureCreated();
         }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<User> UserSet { get; set; }
+        public DbSet<Company> CompanySet { get; set; }
+        public DbSet<Stock> StockSet { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

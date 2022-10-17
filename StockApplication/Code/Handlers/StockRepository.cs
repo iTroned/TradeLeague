@@ -24,17 +24,39 @@ namespace StockApplication.Code.Handlers
             random = new Random();
             Timer _timer = new Timer(async (e) =>
             {
+                //System.Diagnostics.Debug.WriteLine(DateTime.Now);
                 //await updateValues();
             }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
         }
+        public async Task<bool> tryToBuyStockForUser(string userID, string companyID, int amount)
+        {
+            try
+            {
+                User user = await getUserByID(Guid.Parse(userID));
+                Company company = await getCompanyByID(Guid.Parse(companyID));
+                float totalPrice = company.value * amount;
+                if(!(await userHasEnoughBalance(user, totalPrice)))
+                {
+                    return false;
+                }
+                if (await addStockToUser(user, company, amount) && await removeBalanceFromUser(user.id, totalPrice))
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public async Task<User> getUserByID(Guid id)
         {
-            User user = await _db.Users.FindAsync(id);
-            return user;
+            return await _db.UserSet.FindAsync(id);
         }
         public async Task<User> getUserByUsername(string username)
         {
-            User[] users = await _db.Users.Where(p => p.username == username).ToArrayAsync();
+            User[] users = await _db.UserSet.Where(p => p.username == username).ToArrayAsync();
             if (users.Length == 1)
             {
                 return users[0];
@@ -45,7 +67,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                return await _db.Users.Select(u => u.clone()).ToListAsync();
+                return await _db.UserSet.Select(u => u.clone()).ToListAsync();
             }
             catch
             {
@@ -56,7 +78,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                User user = await _db.Users.FindAsync(editUser.id);
+                User user = await _db.UserSet.FindAsync(editUser.id);
                 if (user.username != editUser.username)
                 {
                     if (!(await checkUsername(editUser.username)))
@@ -88,12 +110,11 @@ namespace StockApplication.Code.Handlers
             {
                 if (!(await checkUsername(username)) || username == null || username.Equals(""))
                 {
-                    Console.WriteLine("Username taken");
                     return false;
                 }
                 Guid id = Guid.NewGuid();
                 User user = new User(id, username, null, startBalance);
-                _db.Users.Add(user);
+                _db.UserSet.Add(user);
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -108,7 +129,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                _db.Remove(await getUserByID(Guid.Parse(id)));
+                _db.UserSet.Remove(await getUserByID(Guid.Parse(id)));
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -119,29 +140,16 @@ namespace StockApplication.Code.Handlers
         }
         public async Task<bool> checkUsername(string username)
         {
-            User[] users = await _db.Users.Where(p => p.username == username).ToArrayAsync();
+            User[] users = await _db.UserSet.Where(p => p.username == username).ToArrayAsync();
             if (users.Length != 0)
             {
                 return false;
             }
             return true;
         }
-        public Stock getStockByID(Guid id)
-        {
-            return new Stock();
-        }
-        public bool updateStock(Guid id, Stock stock)
-        {
-            return true;
-        }
-        public Guid createStock(Stock stock)
-        {
-            Guid id = Guid.NewGuid();
-            return id;
-        }
         public async Task<Company> getCompanyByID(Guid id)
         {
-            Company company = await _db.Companies.FindAsync(id);
+            Company company = await _db.CompanySet.FindAsync(id);
             return company;
         }
         /*public async Task<bool> updateCompany(Company editCompany)
@@ -166,7 +174,7 @@ namespace StockApplication.Code.Handlers
             {
                 Guid id = Guid.NewGuid();
                 Company company = new Company(id, name, startValue);
-                _db.Companies.Add(company);
+                _db.CompanySet.Add(company);
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -179,8 +187,9 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                Company company = await _db.Companies.FindAsync(id);
+                Company company = await _db.CompanySet.FindAsync(id);
                 company.value = value;
+                await _db.SaveChangesAsync();
                 return true;
             }
             catch
@@ -205,45 +214,175 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                return await _db.Companies.Select(u => u.clone()).ToListAsync();
+                return await _db.CompanySet.Select(u => u.clone()).ToListAsync();
             }
             catch
             {
                 return null;
             }
         }
-        public float getBalanceForUser(User user)
+        public async Task<float> getBalanceForUser(Guid id)
         {
-            return 0;
+            User user = await getUserByID(id);
+            return user.balance;
         }
 
-        public bool setBalanceForUser(User user, float balance)
+        public async Task<bool> setBalanceForUser(Guid id, float balance)
         {
-            return true;
+            try
+            {
+                User user = await getUserByID(id);
+                user.balance = balance;
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
         }
-        public bool removeBalanceFromUser(User user, float value)
+        public async Task<Stock> getStockByID(Guid id)
         {
-            float currentBalance = getBalanceForUser(user);
+            return await _db.StockSet.FindAsync(id);
+        }
+        public async Task<bool> deleteStock(Guid id)
+        {
+            try
+            {
+                _db.StockSet.Remove(await getStockByID(id));
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<bool> removeBalanceFromUser(Guid id, float value)
+        {
+            float currentBalance = await getBalanceForUser(id);
             if (currentBalance >= value)
             {
-                setBalanceForUser(user, currentBalance - value);
+                await setBalanceForUser(id, currentBalance - value);
                 return true;
             }
             return false;
         }
-        public bool removeStockFromUser(User user, Stock stock, int amount)
+        public async Task<bool> userHasEnoughBalance(User user, float value)
         {
-            return false;
+            return await getBalanceForUser(user.id) >= value;
         }
+        public async Task<bool> addStockToUser(User user, Company company, int amount)
+        {
+            try
+            {
+                if(await userHasStocksWithCompany(user, company))
+                {
+                    Stock stock = await getStockWithUserAndCompany(user, company);
+                    //should never happen, but for safe measures
+                    if(stock == null)
+                    {
+                        return false;
+                    }
+                    stock.amount += amount;
+                    await _db.SaveChangesAsync();
+                    return true;
+                }
+                return await createStock(user, company, amount);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<bool> createStock(User user, Company company, int amount)
+        {
+            try
+            {
+                Stock stock = new Stock(Guid.NewGuid(), amount, user, company);
+                _db.StockSet.Add(stock);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public async Task<bool> removeStockFromUser(User user, Company company, int amount)
+        {
+            Stock stock = await getStockWithUserAndCompany(user, company);
+            if(stock == null || stock.amount < amount)
+            {
+                return false;
+            }
+            int newAmount = stock.amount - amount;
+            if(newAmount == 0)
+            {
+                await deleteStock(stock.id);
+                return true;
+            }
+            stock.amount = newAmount;
+            await _db.SaveChangesAsync();
+            return true;
+
+        }
+        public async Task<List<Stock>> getStocksWithUser(User user)
+        {
+            try
+            {
+                return await _db.StockSet.Where(p => p.owner == user).ToListAsync();
+            }
+            catch
+            {
+                return null;
+            }
+            
+        }
+        public async Task<List<Stock>> getStocksWithCompany(Company company)
+        {
+            try
+            {
+                return await _db.StockSet.Where(p => p.company == company).ToListAsync();
+            }
+            catch
+            {
+                return null;
+            }
+            
+        }
+        public async Task<Stock> getStockWithUserAndCompany(User user, Company company)
+        {
+            try
+            {
+                Stock[] arr =  await _db.StockSet.Where(p => p.company == company && p.owner == user).ToArrayAsync();
+                if(arr.Length != 1)
+                {
+                    return null;
+                }
+                return arr[0];
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public async Task<bool> userHasStocksWithCompany(User user, Company company)
+        {
+            return await getStockWithUserAndCompany(user, company) != null;
+        }
+        //still under testing
         public async Task<bool> updateValues()
         {
             try
             {
-                foreach (Company company in await _db.Companies.Select(u => u.clone()).ToListAsync())
+                foreach (Company company in await _db.CompanySet.Select(u => u.clone()).ToListAsync())
                 {
                     if (random.Next(2) == 0)
                     {
-                        await updateValueOnCompany(company.id, (float)(company.value * (random.Next(800, 1200)) / 1000));
+                        System.Diagnostics.Debug.WriteLine(company.name);
+                        //await updateValueOnCompany(company.id, (float)(company.value * (random.Next(800, 1200)) / 1000));
                     }
                 }
                 return true;

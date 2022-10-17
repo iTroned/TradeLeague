@@ -21,12 +21,12 @@ namespace StockApplication.Code.DAL
                 var company1 = new Company(Guid.NewGuid(), "Random Inc.", 69.69F);
                 var company2 = new Company(Guid.NewGuid(), "Organic Chemistry Inc.", 42.2F);
 
-                context.Users.Add(admin);
-                context.Users.Add(luddeBassen);
-                context.Users.Add(itroned);
+                context.UserSet.Add(admin);
+                context.UserSet.Add(luddeBassen);
+                context.UserSet.Add(itroned);
 
-                context.Companies.Add(company1);
-                context.Companies.Add(company2);
+                context.CompanySet.Add(company1);
+                context.CompanySet.Add(company2);
                 context.SaveChanges();
             }
            

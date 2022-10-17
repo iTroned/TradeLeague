@@ -30,7 +30,7 @@ namespace StockApplication
             services.AddControllers();
             services.AddDbContext<StockContext>(options => options.UseSqlite("Data Source=Stock.db"));
             services.AddScoped<IStockRepository, StockRepository>();
-            services.AddHostedService<ValueUpdater>();
+            //services.AddHostedService<ValueUpdater>();
             services.AddSession(options =>
             {
                 options.Cookie.Name = ".AdventureWorks.Session";
