@@ -2,34 +2,37 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Home</title>
+    <title>Company-Chart</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    <script src="js/index.js"></script>
+    <script src="js/chartCompany.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">La oss fikse logo</a>
+                <a class="navbar-brand" href="#">WebSiteName</a>
             </div>
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.html">Home</a></li>
                 <li><a href="createUser.html">Create User</a></li>
                 <li><a href="createCompany.html">Create Company</a></li>
+                <li><a href="swappage.html">Swap account</a></li>
+                <li><a href="companies.html">Companies</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="myprofile.html"><span class="glyphicon glyphicon-user"></span>Profile</a></li>
             </ul>
         </div>
     </nav>
+     
     <div class="container">
-        <h1>Your wallet</h1>
-        <div id="users"></div>
-    </div>
-    <div class="container">
-        <h1>Edit owned stocks</h1>
-        <div id="companies"></div>
+        <h1 id="name"></h1>
+        <div id="chart">
+            <canvas id="companyChart"></canvas>
+        </div>
+        <div id="info"></div>
     </div>
 </body>
 </html>
