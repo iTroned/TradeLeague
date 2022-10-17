@@ -37,7 +37,7 @@ namespace StockApplication.Code.Handlers
                 User user = await getUserByID(Guid.Parse(userID));
                 Company company = await getCompanyByID(Guid.Parse(companyID));
                 float totalPrice = company.value * amount;
-                if(!(await userHasEnoughBalance(user, totalPrice)))
+                if(!(user.balance > totalPrice))
                 {
                     return false;
                 }
@@ -64,12 +64,12 @@ namespace StockApplication.Code.Handlers
             {
                 User user = await getUserByID(Guid.Parse(userID));
                 Company company = await getCompanyByID(Guid.Parse(companyID));
+                float totalPrice = company.value * amount;
                 Stock stock = await getStockWithUserAndCompany(user, company);
                 if(stock == null || stock.amount < amount)
                 {
                     return false;
                 }
-                float totalPrice = company.value * amount;
                 if(!(await removeStockFromUser(user, company, amount)))
                 {
                     return false;

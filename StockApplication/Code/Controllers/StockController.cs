@@ -67,9 +67,10 @@ namespace StockApplication.Controllers
 
 
         private const string SessionKeyUser = "_currentUser";
-        public void setCurrentUser(string id)
+        public async Task<User> setCurrentUser(string id)
         {
             HttpContext.Session.SetString(SessionKeyUser, id);
+            return await getCurrentUser();
         }
 
         public async Task<string> getCurrentUserID()
