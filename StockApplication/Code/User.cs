@@ -10,29 +10,20 @@ namespace StockApplication.Code
         public Guid id { get; set; }
         public string username { get; set; }
 
-        public Stock[] ownedStocks { get; set; }
         public float balance { get; set; }
-        public User() : this(Guid.Empty, null, null, 0)
+        public User() : this(Guid.Empty, null, 0)
         {
 
         }
-        public User(Guid id, string username, Stock[] ownedStocks, float balance)
+        public User(Guid id, string username, float balance)
         {
             this.id = id;
             this.username = username;
-            if(ownedStocks != null)
-            {
-                this.ownedStocks = ownedStocks;
-            }
-            else
-            {
-                this.ownedStocks = new Stock[0];
-            }
             this.balance = balance;
         }
         public User clone()
         {
-            return new User(id, username, ownedStocks, balance);
+            return new User(id, username, balance);
         }
     }
 }

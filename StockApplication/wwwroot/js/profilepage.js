@@ -23,16 +23,19 @@ function formatBalance(user) {
 }
 
 function formatStock(user) {
-    let out = "<table class='table table-striped'>" +
-        "<tr>" +
-        "<th>Stock name</th><th>(Shares)</th>" +
-        "</tr>";
-        "<tr>" +
-            "<td>" + user.ownedStock + "</td>" +
-            //"<td>" + user.stockShares + "</td>" +
+    $.get("Stock/getStocksForUser?id=" + user.id, function (stockList) {
+        let out = "<table class='table table-striped'>" +
+            "<tr>" +
+            "<th>Stock name</th><th>(Shares)</th>" +
             "</tr>";
-    
-    $("#ownedstock").html(out);
-
+        for (let stock of stockList) {
+            out += "<tr>" +
+                "<td>" + stock.name + "</td>" +
+                "<td>" + stock.amount + "</td>" +
+                "</tr>";
+        }
+        
+        $("#ownedstock").html(out);
+    });
 }
 

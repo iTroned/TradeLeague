@@ -108,6 +108,17 @@ namespace StockApplication.Controllers
         {
             return await _db.getUserByID(Guid.Parse(await getCurrentUserID()));
         }
+        public async Task<List<StockName>> getStocksForUser(string id)
+        {
+            List<Stock> dbList = await _db.getStocksWithUser(await _db.getUserByID(Guid.Parse(id)));
+            List<StockName> stockList = new List<StockName>();
+            foreach(Stock stock in dbList)
+            {
+                //stockList.Add(new StockName(stock.company.name, stock.amount));
+                System.Diagnostics.Debug.WriteLine(stock.company);
+            }
+            return stockList;
+        }
         public void removeCurrentUser()
         {
             HttpContext.Session.SetString(SessionKeyUser, "");

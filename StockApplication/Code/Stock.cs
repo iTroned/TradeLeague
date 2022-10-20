@@ -9,13 +9,13 @@ namespace StockApplication.Code
     {
         public Guid id { get; set; }
         public int amount { get; set; }
-        public Company company { get; set; }
-        public User owner { get; set; }
+        public string company { get; set; }
+        public string owner { get; set; }
         public Stock() : this(Guid.Empty, 0, null, null)
         {
 
         }
-        public Stock(Guid id, int amount, User owner, Company company)
+        public Stock(Guid id, int amount, string owner, string company)
         {
             this.id = id;
             this.amount = amount;

@@ -35,7 +35,8 @@ namespace StockApplication.Code.Handlers
             try
             {
                 User user = await getUserByID(Guid.Parse(userID));
-                Company company = await getCompanyByID(Guid.Parse(companyID));
+                Company company = await getCompanyByID(Guid.Parse(companyID)); 
+                System.Diagnostics.Debug.WriteLine(user.username + " is buying " + amount + " of " + company.name);
                 float totalPrice = company.value * amount;
                 if(!(user.balance > totalPrice))
                 {
@@ -127,7 +128,6 @@ namespace StockApplication.Code.Handlers
                     user.username = editUser.username;
                 }
                 user.balance = editUser.balance;
-                user.ownedStocks = editUser.ownedStocks;
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -145,7 +145,7 @@ namespace StockApplication.Code.Handlers
                     return false;
                 }
                 Guid id = Guid.NewGuid();
-                User user = new User(id, username, null, startBalance);
+                User user = new User(id, username, startBalance);
                 _db.UserSet.Add(user);
                 await _db.SaveChangesAsync();
                 return true;
@@ -284,6 +284,17 @@ namespace StockApplication.Code.Handlers
         {
             return await _db.StockSet.FindAsync(id);
         }
+        public async Task<List<Stock>> getAllStocks()
+        {
+            try
+            {
+                return await _db.StockSet.Select(u => u.clone()).ToListAsync();
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public async Task<bool> deleteStock(Guid id)
         {
             try
@@ -338,6 +349,7 @@ namespace StockApplication.Code.Handlers
             {
                 if(await userHasStocksWithCompany(user, company))
                 {
+                    System.Diagnostics.Debug.WriteLine("YUP");
                     Stock stock = await getStockWithUserAndCompany(user, company);
                     //should never happen, but for safe measures
                     if(stock == null)
@@ -359,7 +371,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                Stock stock = new Stock(Guid.NewGuid(), amount, user, company);
+                Stock stock = new Stock(Guid.NewGuid(), amount, user.id.ToString(), company.id.ToString());
                 _db.StockSet.Add(stock);
                 await _db.SaveChangesAsync();
                 return true;
@@ -391,7 +403,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                return await _db.StockSet.Where(p => p.owner == user).ToListAsync();
+                return await _db.StockSet.Where(p => p.owner == user.id.ToString()).ToListAsync();
             }
             catch
             {
@@ -403,7 +415,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                return await _db.StockSet.Where(p => p.company == company).ToListAsync();
+                return await _db.StockSet.Where(p => p.company == company.id.ToString()).ToListAsync();
             }
             catch
             {
@@ -415,7 +427,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                Stock[] arr =  await _db.StockSet.Where(p => p.company == company && p.owner == user).ToArrayAsync();
+                Stock[] arr =  await _db.StockSet.Where(p => p.company == company.id.ToString() && p.owner == user.id.ToString()).ToArrayAsync();
                 if(arr.Length != 1)
                 {
                     return null;

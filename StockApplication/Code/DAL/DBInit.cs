@@ -16,9 +16,9 @@ namespace StockApplication.Code.DAL
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
-                var admin = new User(Guid.NewGuid(), "admin", null, 99999999999);
-                var luddeBassen = new User(Guid.NewGuid(), "Luddebassen", null, 100000);
-                var itroned = new User(Guid.NewGuid(), "iTroned", null, 100000);
+                var admin = new User(Guid.NewGuid(), "admin", 100000);
+                var luddeBassen = new User(Guid.NewGuid(), "Luddebassen", 100000);
+                var itroned = new User(Guid.NewGuid(), "iTroned", 100000);
 
 
                 var company1 = new Company(Guid.NewGuid(), "Random Inc.", 69.69F, JsonConvert.SerializeObject(randomArray(69.69)));
