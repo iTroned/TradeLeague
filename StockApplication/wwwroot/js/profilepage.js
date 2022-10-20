@@ -17,7 +17,7 @@ function formatUser(user) {
 }
 
 function formatBalance(user) {
-    let out = " Your current balance is: " + user.balance;
+    let out = "" + user.balance + "$";
     $("#balance").html(out);
 
 }

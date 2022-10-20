@@ -4,38 +4,120 @@
     <meta charset="utf-8" />
     <title>Home</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/site.css">
     <script src="js/profilepage.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">TradeLeague</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="createUser.html">Create User</a></li>
-                <li><a href="createCompany.html">Create Company</a></li>
-                <li><a href="swappage.html">Swap account</a></li>
-                <li><a href="companies.html">Companies</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="profilepage.html"><span class="glyphicon glyphicon-user"></span>    Profile</a></li>
-            </ul>
-        </div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark text-white">
+        <!--Brand/logo-->
+        <a class="navbar-brand" style="font-size:25px" href="#">TradeLeague</a>
+
+        <!--Links-->
+        <ul class="navbar-nav" style="font-size:18px">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">  Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="createUser.html">  Create User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="createCompany.html">  Create Company</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="swappage.html">  Swap account</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="companies.html">  Companies</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto" style="font-size:18px">
+            <li class="nav-item active">
+                <a class="nav-link" href="profilepage.html"><i class="fa fa-user-circle"></i>    Profile</a>
+            </li>
+        </ul>
     </nav>
 
+    <br />
     <div class="container">
         <h1 id="name">  </h1>
     </div>
-    <div class="container">
-        <p1 id="balance">   </p1>
+    <br />
+    <div class="container p-3 mb-2 bg-dark card">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class=" card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class=" row no-gutters align-items-center">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase">Balance (live): <i class="fa fa-money"></i></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <p1 id="balance">"" <i class="fa fa-money"></i>  </p1>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4" style="position:absolute; right:0;">
+            <div class=" card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class=" row no-gutters align-items-center">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase">Balance change:</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <p1 id="">  LUDDE CHART </p1>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
     </div>
-    <div class="container">
-        <h1>Owned stocks</h1>
+
+    <br />
+    <br />
+    <br>
+    <div class="container card bg-light">
+        <h1>Your funds</h1>
         <div id="ownedstock"></div>
     </div>
+    <br />
+
+    <footer class="page-footer font-small bg-dark text-white pt-4" style="position:absolute;bottom:0px;width:100%">
+        <div class="container-fluid text-center text-md-left">
+            <div class="row">
+                <div class="col-md-6 mt-md-0 mt-3">
+
+                    <h5 class="text-uppercase font-weight-bold">Contact us</h5>
+                    
+                    <p>
+                        <a href="https://www.facebook.com/" title="Facebook"></a> <i class="fa fa-facebook-square" style="font-size: 30px; padding-right: 25px"></i>           
+                        <i class="fa fa-twitter-square" style="font-size: 30px; padding-right: 25px"></i>       
+                        <i class="fa fa-instagram" style="font-size:30px;padding-right: 25px"></i>
+                    </p>
+                    <h6 class="text-uppercase font-weight">Email: TradeLeague@gmail.com</h6>
+
+                </div>
+
+                <hr class="clearfix w-100 d-md-none pb-3">
+
+                <div class="col-md-6 mb-md-0 mb-3">
+
+                    <h5 class="text-uppercase font-weight-bold">About the page:</h5>
+                    <p>
+                        <i class="text-warning">WARNING.</i> This project is exclusively for school and we do not condone gambling in real life. All currency on the page is fictional and does not relate to anything in real life.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="footer-copyright text-center py-3">
+            © 2022 Copyright: TradeLeague
+        </div>
+
+    </footer>
+
 </body>
 </html>
