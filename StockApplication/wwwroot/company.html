@@ -4,30 +4,43 @@
     <meta charset="utf-8" />
     <title>Company-Chart</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="js/chartCompany.js"></script>
     <link rel="stylesheet" href="css/site.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">TradeLeague</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="createUser.html">Create User</a></li>
-                <li><a href="createCompany.html">Create Company</a></li>
-                <li><a href="swappage.html">Swap account</a></li>
-                <li class="active"><a href="companies.html">Companies</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class=""><a href="profilepage.html"><span class="glyphicon glyphicon-user"></span>    Profile</a></li>
-            </ul>
-        </div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark text-white">
+        <!--Brand/logo-->
+        <a class="navbar-brand" style="font-size:25px" href="#">TradeLeague</a>
+
+        <!--Links-->
+        <ul class="navbar-nav" style="font-size:18px">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">  Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="createUser.html">  Create User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="createCompany.html">  Create Company</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="swappage.html">  Swap account</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="companies.html">  Companies</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto" style="font-size:18px">
+            <li class="nav-item">
+                <a class="nav-link" href="profilepage.html"><i class="fa fa-user-circle"></i>    Profile</a>
+            </li>
+        </ul>
     </nav>
-     
+    <br />
+
     <div class="container">
         <h1 id="name"></h1>
         <div class="container">
@@ -46,5 +59,40 @@
             </div>
         </div>
     </div>
+    <br />
+
+    <footer class="page-footer font-small bg-dark text-white pt-2" style="position:absolute;width:100%">
+        <div class="container-fluid text-center text-md-left">
+            <div class="row">
+                <div class="col-md-6 mt-md-1 mt-3">
+
+                    <h5 class="text-uppercase font-weight-bold">Contact us</h5>
+
+                    <p>
+                        <a href="https://www.facebook.com" target="_blank" title="Facebook"><i class="fa fa-facebook-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
+                        <a href="https://www.twitter.com" target="_blank" title="Twitter"><i class="fa fa-twitter-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
+                        <a href="https://www.instagram.com" target="_blank" title="Instagram"><i class="fa fa-instagram" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
+                        <br />
+                    </p>
+                    <h class="text-uppercase font-weight">Email: TradeLeague@gmail.com</h>
+
+                </div>
+
+                <hr class="clearfix w-100 d-md-none pb-3">
+
+                <div class="col-md-6 mb-md-0 mb-3">
+
+                    <h5 class="text-uppercase font-weight-bold">About the page:</h5>
+                    <p>
+                        <i class="text-warning">WARNING.</i> This project is exclusively for school and we do not condone gambling in real life. All currency on the page is fictional and does not relate to anything in real life.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright text-center py-1">
+            © 2022 Copyright: TradeLeague
+        </div>
+
+    </footer>
 </body>
 </html>

@@ -11,13 +11,14 @@ function getCurrentUser() {
 }
 
 function formatUser(user) {
-    let out = "Welcome to your profile, " + user.username;
+    let out = "" + user.username;
     $("#name").html(out);
 
 }
 
+
 function formatBalance(user) {
-    let out = "" + user.balance + "$";
+    let out = "$" + user.balance ;
     $("#balance").html(out);
 
 }
