@@ -7,6 +7,7 @@ using StockApplication.Code;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace StockApplication.Controllers
 {
@@ -15,9 +16,11 @@ namespace StockApplication.Controllers
     {
         private const string adminName = "admin";
         private readonly IStockRepository _db;
-        public StockController(IStockRepository db)
+        private readonly IHostedService listenerService;
+        public StockController(IStockRepository db, IHostedService listenerService)
         {
             _db = db;
+            this.listenerService = listenerService;
         }
         //returns a user by its id
         public async Task<User> getUserByID(string id)
@@ -197,6 +200,10 @@ namespace StockApplication.Controllers
                 return 0;
             }
             return stock.amount;
+        }
+        public async Task updateValues()
+        {
+            await _db.updateValues();
         }
 
     }

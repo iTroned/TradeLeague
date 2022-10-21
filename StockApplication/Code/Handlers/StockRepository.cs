@@ -24,11 +24,12 @@ namespace StockApplication.Code.Handlers
             _db = db;
 
             random = new Random();
-            Timer _timer = new Timer(async (e) =>
+            /*Timer _timer = new Timer(async(e) =>
             {
                 //System.Diagnostics.Debug.WriteLine(DateTime.Now);
                 //await updateValues();
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));*/
+            
         }
         public async Task<bool> tryToBuyStockForUser(string userID, string companyID, int amount)
         {
@@ -445,14 +446,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                foreach (Company company in await _db.CompanySet.Select(u => u.clone()).ToListAsync())
-                {
-                    if (random.Next(2) == 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine(company.name);
-                        //await updateValueOnCompany(company.id, (float)(company.value * (random.Next(800, 1200)) / 1000));
-                    }
-                }
+                System.Diagnostics.Debug.WriteLine(DateTime.Now);
                 return true;
             }
             catch
