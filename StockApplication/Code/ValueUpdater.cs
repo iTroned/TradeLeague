@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using StockApplication.Controllers;
 using System;
 using System.Collections.Specialized;
 using System.Threading;
@@ -6,29 +7,21 @@ using System.Threading.Tasks;
 
 namespace StockApplication.Code
 {
-    public class ValueUpdater : IHostedService
+    public class ValueUpdater : BackgroundService
     {
-        private Timer _timer;
         
-        public static void updateAllValues()
+        public ValueUpdater()
         {
-            //Code that runs every given time
             
         }
-
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _timer = new Timer((e) =>
+            //private readonly PeriodicTimer _
+            while (!stoppingToken.IsCancellationRequested)
             {
-                updateAllValues();
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
-            return Task.CompletedTask;
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            _timer?.Change(Timeout.Infinite, 0);
-            return Task.CompletedTask;
+                
+                await Task.Delay(1000, stoppingToken);
+            }
         }
     }
 }
