@@ -220,9 +220,19 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
+                
                 Company company = await _db.CompanySet.FindAsync(id);
-                value = (float)Math.Round(value * 100f) / 100f;
+                value = (float) Math.Round(value * 100f) / 100f;
                 company.value = value;
+                float[] arr = JsonConvert.DeserializeObject<float[]>(company.values);
+                //System.Diagnostics.Debug.WriteLine("Length: " + arr.Length);
+                for (int i = 0; i < arr.Length - 1; i++)
+                {
+                    //System.Diagnostics.Debug.WriteLine(arr[i] + "/" + arr[i + 1]);
+                    arr[i] = arr[i + 1];
+                }
+                arr[arr.Length - 1] = value;
+                company.values = JsonConvert.SerializeObject(arr);
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -441,10 +451,9 @@ namespace StockApplication.Code.Handlers
             {
                 float multiplier = (random.Next(8000, 12001)) / 10000F;
          
-                await updateValueOnCompany(company.id, company.value * multiplier   );
-                System.Diagnostics.Debug.WriteLine((await getCompanyByID(company.id)).value);
+                await updateValueOnCompany(company.id, company.value * multiplier);
             }
-            System.Diagnostics.Debug.WriteLine("Updated Values");
+           
         }
         
         

@@ -1,5 +1,9 @@
 ﻿$(function () {
     getAllCompanies();
+    //Happens every 10 seconds | problematic that it refreshes the table
+    window.setInterval(function () {
+        //getAllCompanies();
+    }, 10000);
 });
 
 function getAllCompanies() {

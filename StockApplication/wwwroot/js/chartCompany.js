@@ -1,6 +1,9 @@
 ﻿$(function () {
     getCompany();
     getStock();
+    window.setInterval(function () {
+        getCompany();
+    }, 1000);
 });
 function getCompany() {
     $.get("Stock/getCurrentCompany", function (company) {

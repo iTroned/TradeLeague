@@ -26,7 +26,8 @@ namespace StockApplication.Code
                     IStockRepository rep = scope.ServiceProvider.GetRequiredService<IStockRepository>();
                     await rep.updateValues();
                 }
-                await Task.Delay(60000, stoppingToken);
+                //await Task.Delay(60000, stoppingToken);
+                await Task.Delay(10000, stoppingToken);
             }
         }
     }
