@@ -201,10 +201,6 @@ namespace StockApplication.Controllers
             }
             return stock.amount;
         }
-        public async Task updateValues()
-        {
-            await _db.updateValues();
-        }
 
     }
 }

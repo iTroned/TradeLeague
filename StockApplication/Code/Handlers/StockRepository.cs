@@ -22,14 +22,7 @@ namespace StockApplication.Code.Handlers
         public StockRepository(StockContext db)
         {
             _db = db;
-
             random = new Random();
-            /*Timer _timer = new Timer(async(e) =>
-            {
-                //System.Diagnostics.Debug.WriteLine(DateTime.Now);
-                //await updateValues();
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));*/
-            
         }
         public async Task<bool> tryToBuyStockForUser(string userID, string companyID, int amount)
         {
@@ -441,19 +434,18 @@ namespace StockApplication.Code.Handlers
         {
             return await getStockWithUserAndCompany(user, company) != null;
         }
-        //still under testing
-        public async Task<bool> updateValues()
+        public async Task updateValues()
         {
-            try
+            foreach (Company company in await getAllCompanies())
             {
-                System.Diagnostics.Debug.WriteLine(DateTime.Now);
-                return true;
+                float multiplier = (random.Next(8000, 12001)) / 10000F;
+         
+                await updateValueOnCompany(company.id, company.value * multiplier);
+                System.Diagnostics.Debug.WriteLine((await getCompanyByID(company.id)).value);
             }
-            catch
-            {
-                return false;
-            }
+            System.Diagnostics.Debug.WriteLine("Updated Values");
         }
+        
         
     }
 }

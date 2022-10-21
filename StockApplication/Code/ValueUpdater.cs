@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using StockApplication.Code.DAL;
+using StockApplication.Code.Handlers;
 using StockApplication.Controllers;
 using System;
 using System.Collections.Specialized;
@@ -9,18 +13,20 @@ namespace StockApplication.Code
 {
     public class ValueUpdater : BackgroundService
     {
-        
-        public ValueUpdater()
-        {
-            
-        }
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<ValueUpdater> _logger;
+        public ValueUpdater(IServiceProvider serviceProvider, ILogger<ValueUpdater> logger) =>
+        (_serviceProvider, _logger) = (serviceProvider, logger);
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //private readonly PeriodicTimer _
             while (!stoppingToken.IsCancellationRequested)
             {
-                
-                await Task.Delay(1000, stoppingToken);
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    IStockRepository rep = scope.ServiceProvider.GetRequiredService<IStockRepository>();
+                    await rep.updateValues();
+                }
+                await Task.Delay(60000, stoppingToken);
             }
         }
     }
