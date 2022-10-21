@@ -20,10 +20,10 @@ namespace StockApplication.Code.Handlers
         Task<bool> tryToBuyStockForUser(string userID, string companyID, int amount);
         Task<bool> tryToSellStockForUser(string userID, string companyID, int amount);
         Task<float> getBalanceForUser(Guid id);
-        Task<bool> setBalanceForUser(User user, float balance);
+        void setBalanceForUser(User user, float balance);
         Task<Stock> getStockByID(Guid id);
         Task<bool> deleteStock(Guid id);
-        Task<bool> addBalanceToUser(User user, float value);
+        void addBalanceToUser(User user, float value);
         Task<bool> removeBalanceFromUser(User user, float value);
         Task<bool> userHasEnoughBalance(User user, float value);
         Task<bool> addStockToUser(User user, Company company, int amount);

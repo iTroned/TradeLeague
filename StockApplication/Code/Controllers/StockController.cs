@@ -78,16 +78,19 @@ namespace StockApplication.Controllers
             }
             return false;
         }
+        //not yet implemented
         public async Task<bool> deleteCompany(string id)
         {
-            return await _db.deleteCompany(id);
+            return false;
+            //return await _db.deleteCompany(id);
         }
 
         private const string SessionKeyCompany = "_currentCompany";
         public async Task<bool> setCurrentCompany(string id)
         {
             HttpContext.Session.SetString(SessionKeyCompany, id);
-            return await getCurrentCompany() != null;
+            //return await getCurrentCompany() != null;
+            return true;
         }
 
         public string getCurrentCompanyID()
@@ -113,7 +116,7 @@ namespace StockApplication.Controllers
 
         {
             string cur = HttpContext.Session.GetString(SessionKeyUser);
-            if (cur != "" && cur != null)
+            if (cur != null && cur != "")
             {
                 return cur;
             }
