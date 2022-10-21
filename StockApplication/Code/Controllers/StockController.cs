@@ -140,6 +140,10 @@ namespace StockApplication.Controllers
         {
             return await _db.tryToSellStockForUser(await getCurrentUserID(), getCurrentCompanyID(), amount);
         }
+        public async Task<Stock> getCurrentStock()
+        {
+            return await _db.getStockWithUserAndCompany(await getCurrentUser(), await getCurrentCompany());
+        }
 
     }
 }
