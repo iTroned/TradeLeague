@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StockApplication.Code
 {
@@ -10,11 +7,11 @@ namespace StockApplication.Code
     {
         public Guid id { get; set; }
         public int amount { get; set; }
-        [ForeignKey("User")]
+        
         public Guid Userid { get; set; }
-        [ForeignKey("Company")]
         public Guid Companyid { get; set; }
         public string companyName { get; set; }
+
         public virtual User User { get; set; }
         public virtual Company Company { get; set; }
         public Stock() : this(Guid.Empty, 0, Guid.Empty, Guid.Empty, null)
@@ -33,6 +30,6 @@ namespace StockApplication.Code
         {
             return new Stock(id, amount, Userid, Companyid, companyName);
         }
-        
+
     }
 }
