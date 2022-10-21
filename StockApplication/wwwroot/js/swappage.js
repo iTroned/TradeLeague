@@ -37,7 +37,7 @@ function formatUsers(users) {
     $("#users").html(out);
 }
 function swapUser(id) {
-    $.get("Stock/setCurrentUser?id=" + id, function (user) {
+    $.get("Stock/setCurrentUser?id=" + id, function (OK) {
         uid = id;
         getAllUsers();
     });

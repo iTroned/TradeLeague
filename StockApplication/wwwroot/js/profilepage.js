@@ -7,6 +7,9 @@ function getCurrentUser() {
         formatUser(user);
         formatBalance(user);
         formatStock(user);
+        if (user.username === "admin") {
+            $("#buttons").html("");
+        }
     });
 }
 
@@ -18,7 +21,7 @@ function formatUser(user) {
 
 
 function formatBalance(user) {
-    let out = "$" + user.balance ;
+    let out = user.balance + "$";
     $("#balance").html(out);
 
 }
@@ -38,5 +41,16 @@ function formatStock(user) {
         
         $("#ownedstock").html(out);
     });
+}
+
+function deleteUser() {
+    $.get("Stock/deleteUser", function (OK) {
+        if (OK) {
+            window.location.href = "index.html";
+        }
+    });
+}
+function editUser() {
+    window.location.href = "edit.html";
 }
 

@@ -1,5 +1,6 @@
 ﻿$(function () {
     getCompany();
+    getStock();
 });
 function getCompany() {
     $.get("Stock/getCurrentCompany", function (company) {
@@ -51,9 +52,9 @@ function formatCompany(company) {
 
     $("#information").html(out);
 }
-function getUser() {
-    $.get("Stock/getCurrentStock", function (stock) {
-        $("#current").html("Current stocks: " + stock.amount);
+function getStock() {
+    $.get("Stock/getCurrentStockAmount", function (amount) {
+        $("#current").html("Current stocks: " + amount);
     });
 }
 function buyStock() {
@@ -61,6 +62,7 @@ function buyStock() {
     $.get("Stock/buyStock?amount=" + amount, function (OK) {
         if (OK) {
             $("#message").html("Successfully bought " + amount + " stocks!");
+            getStock();
         }
         else {
             $("#message").html("Something went wrong while buying!");
@@ -71,8 +73,8 @@ function sellStock() {
     const amount = $("#amount").val();
     $.get("Stock/sellStock?amount=" + amount, function (OK) {
         if (OK) {
-
             $("#message").html("Successfully sold " + amount + " stocks!");
+            getStock();
         }
         else {
             $("#message").html("Something went wrong while selling!");

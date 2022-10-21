@@ -30,8 +30,10 @@ namespace StockApplication.Code.Handlers
         Task<bool> createStock(User user, Company company, int amount);
         Task<bool> removeStockFromUser(User user, Company company, int amount);
         Task<List<Stock>> getStocksWithUser(User user);
+        Task<List<Stock>> getStocksWithUserID(string id);
         Task<List<Stock>> getStocksWithCompany(Company company);
         Task<Stock> getStockWithUserAndCompany(User user, Company company);
+        Task<Stock> getStockWithUserAndCompany(string uid, string cid);
         Task<bool> userHasStocksWithCompany(User user, Company company);
         Task<bool> updateValues();
         Task<List<Stock>> getAllStocks();

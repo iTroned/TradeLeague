@@ -172,7 +172,7 @@ namespace StockApplication.Code.Handlers
         }
         public async Task<bool> checkUsername(string username)
         {
-            User[] users = await _db.UserSet.Where(p => p.username == username).ToArrayAsync();
+            User[] users = await _db.UserSet.Where(p => p.username.ToLower() == username.ToLower()).ToArrayAsync();
             if (users.Length != 0)
             {
                 return false;
@@ -349,7 +349,7 @@ namespace StockApplication.Code.Handlers
             {
                 if(await userHasStocksWithCompany(user, company))
                 {
-                    System.Diagnostics.Debug.WriteLine("YUP");
+                    //System.Diagnostics.Debug.WriteLine("YUP");
                     Stock stock = await getStockWithUserAndCompany(user, company);
                     //should never happen, but for safe measures
                     if(stock == null)
@@ -371,7 +371,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                Stock stock = new Stock(Guid.NewGuid(), amount, user.id, company.id);
+                Stock stock = new Stock(Guid.NewGuid(), amount, user.id, company.id, company.name);
                 _db.StockSet.Add(stock);
                 await _db.SaveChangesAsync();
                 return true;
@@ -399,23 +399,31 @@ namespace StockApplication.Code.Handlers
             return true;
 
         }
-        public async Task<List<Stock>> getStocksWithUser(User user)
+        public async Task<List<Stock>> getStocksWithUserID(Guid id)
         {
             try
             {
-                return await _db.StockSet.Where(p => p.owner == user.id.ToString()).ToListAsync();
+                return await _db.StockSet.Where(p => p.Userid == id).ToListAsync();
             }
             catch
             {
                 return null;
             }
             
+        }
+        public async Task<List<Stock>> getStocksWithUserID(string id)
+        {
+            return await getStocksWithUserID(Guid.Parse(id));
+        }
+        public async Task<List<Stock>> getStocksWithUser(User user)
+        {
+            return await getStocksWithUserID(user.id);
         }
         public async Task<List<Stock>> getStocksWithCompany(Company company)
         {
             try
             {
-                return await _db.StockSet.Where(p => p.company == company.id.ToString()).ToListAsync();
+                return await _db.StockSet.Where(p => p.Companyid == company.id).ToListAsync();
             }
             catch
             {
@@ -423,11 +431,11 @@ namespace StockApplication.Code.Handlers
             }
             
         }
-        public async Task<Stock> getStockWithUserAndCompany(User user, Company company)
+        public async Task<Stock> getStockWithUserAndCompany(Guid uid, Guid cid)
         {
             try
             {
-                Stock[] arr =  await _db.StockSet.Where(p => p.company == company.id.ToString() && p.owner == user.id.ToString()).ToArrayAsync();
+                Stock[] arr =  await _db.StockSet.Where(p => p.Companyid == cid && p.Userid == uid).ToArrayAsync();
                 if(arr.Length != 1)
                 {
                     return null;
@@ -438,6 +446,14 @@ namespace StockApplication.Code.Handlers
             {
                 return null;
             }
+        }
+        public async Task<Stock> getStockWithUserAndCompany(User user, Company company)
+        {
+            return await getStockWithUserAndCompany(user.id, company.id);
+        }
+        public async Task<Stock> getStockWithUserAndCompany(string uid, string cid)
+        {
+            return await getStockWithUserAndCompany(Guid.Parse(uid), Guid.Parse(cid));
         }
         public async Task<bool> userHasStocksWithCompany(User user, Company company)
         {

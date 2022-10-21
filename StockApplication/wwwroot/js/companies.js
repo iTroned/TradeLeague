@@ -11,13 +11,12 @@ function getAllCompanies() {
 function formatCompanies(companies) {
     let out = "<table class='table table-striped' id='table'>" +
         "<tr>" +
-        "<th>Name</th><th>ID</th><th>Value</th>" +
+        "<th>Name</th><th>Value</th>" +
         "</tr>";
     for (let company of companies) {
         out += "<tr>" +
             "<td>" + '<a onclick="goToCompany(\'' + company.id + '\')">' + company.name + "</a></td>" +
-            "<td>" + company.id + "</td>" +
-            "<td>" + company.value + "</td>" +
+            "<td>" + company.value + "$</td>" +
             "</tr>";
     }
     out += "</table>";
