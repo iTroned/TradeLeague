@@ -28,6 +28,10 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
+                if(amount <= 0)
+                {
+                    return false;
+                }
                 User user = await getUserByID(Guid.Parse(userID));
                 Company company = await getCompanyByID(Guid.Parse(companyID)); 
                 //System.Diagnostics.Debug.WriteLine(user.username + " is buying " + amount + " of " + company.name);
@@ -56,6 +60,10 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
+                if (amount <= 0)
+                {
+                    return false;
+                }
                 User user = await getUserByID(Guid.Parse(userID));
                 Company company = await getCompanyByID(Guid.Parse(companyID));
                 float totalPrice = company.value * amount;

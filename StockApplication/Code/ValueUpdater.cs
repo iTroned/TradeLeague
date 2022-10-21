@@ -27,7 +27,7 @@ namespace StockApplication.Code
                     await rep.updateValues();
                 }
                 //await Task.Delay(60000, stoppingToken);
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(60000, stoppingToken);
             }
         }
     }
