@@ -23,7 +23,7 @@ function formatCompanies(companies) {
     out += "</table>";
     $("#companies").html(out);
 }
-
+    
 function goToCompany(id) {
     $.get("Stock/setCurrentCompany?id=" + id, function (OK) {
         if (OK) {
