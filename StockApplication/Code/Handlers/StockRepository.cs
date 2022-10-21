@@ -221,6 +221,7 @@ namespace StockApplication.Code.Handlers
             try
             {
                 Company company = await _db.CompanySet.FindAsync(id);
+                value = (float)Math.Round(value * 100f) / 100f;
                 company.value = value;
                 await _db.SaveChangesAsync();
                 return true;
@@ -440,7 +441,7 @@ namespace StockApplication.Code.Handlers
             {
                 float multiplier = (random.Next(8000, 12001)) / 10000F;
          
-                await updateValueOnCompany(company.id, company.value * multiplier);
+                await updateValueOnCompany(company.id, company.value * multiplier   );
                 System.Diagnostics.Debug.WriteLine((await getCompanyByID(company.id)).value);
             }
             System.Diagnostics.Debug.WriteLine("Updated Values");
