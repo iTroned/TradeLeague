@@ -11,6 +11,8 @@ namespace StockApplication.Code
         public Guid id { get; set; }
         public float value { get; set; }
         public string values { get; set; }
+        public ICollection<Stock> stocks { get; private set; }
+
         public Company() : this(Guid.Empty, null, 0, null)
         {
             

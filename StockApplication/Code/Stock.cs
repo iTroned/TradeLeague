@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,21 +10,26 @@ namespace StockApplication.Code
     {
         public Guid id { get; set; }
         public int amount { get; set; }
-        public string company { get; set; }
-        public string owner { get; set; }
-        public Stock() : this(Guid.Empty, 0, null, null)
+        [ForeignKey("User")]
+        public Guid Userid { get; set; }
+        [ForeignKey("Company")]
+        public Guid Companyid { get; set; }
+        public virtual User User { get; set; }
+        public virtual Company Company { get; set; }
+        public Stock() : this(Guid.Empty, 0, Guid.Empty, Guid.Empty)
         {
 
         }
-        public Stock(Guid id, int amount, string owner, string company)
+        public Stock(Guid id, int amount, Guid Userid, Guid Companyid)
         {
             this.id = id;
             this.amount = amount;
-            this.company = company;
+            this.Userid = Userid;
+            this.Companyid = Companyid;
         }
         public Stock clone()
         {
-            return new Stock(id, amount, owner, company);
+            return new Stock(id, amount, Userid, Companyid);
         }
         
     }

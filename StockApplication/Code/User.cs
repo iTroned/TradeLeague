@@ -9,8 +9,8 @@ namespace StockApplication.Code
     {
         public Guid id { get; set; }
         public string username { get; set; }
-
         public float balance { get; set; }
+        public virtual ICollection<Stock> stocks { get; private set; }
         public User() : this(Guid.Empty, null, 0)
         {
 

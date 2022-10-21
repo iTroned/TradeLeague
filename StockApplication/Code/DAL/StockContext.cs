@@ -16,5 +16,6 @@ namespace StockApplication.Code.DAL
         {
             //optionsBuilder.UseLazyLoadingProxies();
         }
+        
     }
 }

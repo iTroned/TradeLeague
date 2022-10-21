@@ -371,7 +371,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                Stock stock = new Stock(Guid.NewGuid(), amount, user.id.ToString(), company.id.ToString());
+                Stock stock = new Stock(Guid.NewGuid(), amount, user.id, company.id);
                 _db.StockSet.Add(stock);
                 await _db.SaveChangesAsync();
                 return true;
