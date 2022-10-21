@@ -15,7 +15,7 @@ namespace StockApplication.Code.Handlers
     public class StockRepository : IStockRepository
     {
         private readonly StockContext _db;
-        private float startBalance = 100.0F;
+        private float startBalance = 1000.0F;
         private float startValue = 10.0F;
         private Random random;
         private string startValues;
@@ -36,7 +36,7 @@ namespace StockApplication.Code.Handlers
             {
                 User user = await getUserByID(Guid.Parse(userID));
                 Company company = await getCompanyByID(Guid.Parse(companyID)); 
-                System.Diagnostics.Debug.WriteLine(user.username + " is buying " + amount + " of " + company.name);
+                //System.Diagnostics.Debug.WriteLine(user.username + " is buying " + amount + " of " + company.name);
                 float totalPrice = company.value * amount;
                 if(!(user.balance > totalPrice))
                 {
@@ -48,10 +48,9 @@ namespace StockApplication.Code.Handlers
                 }
                 if(!(await addStockToUser(user, company, amount)))
                 {
-                    //If something went wrong when adding the stock, make sure the user gets reimbursed
-                    await addBalanceToUser(user, totalPrice);
                     return false;
                 }
+                await _db.SaveChangesAsync();
                 return true;
             }
             catch
@@ -75,7 +74,8 @@ namespace StockApplication.Code.Handlers
                 {
                     return false;
                 }
-                await addBalanceToUser(user, totalPrice);
+                addBalanceToUser(user, totalPrice);
+                await _db.SaveChangesAsync();
                 return true;
             }
             catch
@@ -266,19 +266,9 @@ namespace StockApplication.Code.Handlers
             return user.balance;
         }
 
-        public async Task<bool> setBalanceForUser(User user, float balance)
+        public void setBalanceForUser(User user, float balance)
         {
-            try
-            {
-                user.balance = balance;
-                await _db.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-            
+            user.balance = balance;
         }
         public async Task<Stock> getStockByID(Guid id)
         {
@@ -308,18 +298,9 @@ namespace StockApplication.Code.Handlers
                 return false;
             }
         }
-        public async Task<bool> addBalanceToUser(User user, float value)
+        public void addBalanceToUser(User user, float value)
         {
-            try
-            {
-                user.balance += value;
-                await _db.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            user.balance += value;
         }
         public async Task<bool> removeBalanceFromUser(User user, float value)
         {
@@ -328,7 +309,7 @@ namespace StockApplication.Code.Handlers
                 float currentBalance = await getBalanceForUser(user.id);
                 if (currentBalance >= value)
                 {
-                    await setBalanceForUser(user, currentBalance - value);
+                    setBalanceForUser(user, currentBalance - value);
                     return true;
                 }
                 return false;
@@ -357,7 +338,7 @@ namespace StockApplication.Code.Handlers
                         return false;
                     }
                     stock.amount += amount;
-                    await _db.SaveChangesAsync();
+                    //await _db.SaveChangesAsync();
                     return true;
                 }
                 return await createStock(user, company, amount);
@@ -395,7 +376,7 @@ namespace StockApplication.Code.Handlers
                 return true;
             }
             stock.amount = newAmount;
-            await _db.SaveChangesAsync();
+            //await _db.SaveChangesAsync();
             return true;
 
         }
