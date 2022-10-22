@@ -22,13 +22,13 @@ namespace StockApplication.Code.Handlers
         Task<float> getBalanceForUser(Guid id);
         void setBalanceForUser(User user, float balance);
         Task<Stock> getStockByID(Guid id);
-        Task<bool> deleteStock(Guid id);
+        Task<bool> deleteStock(Stock stock, bool save);
         void addBalanceToUser(User user, float value);
         Task<bool> removeBalanceFromUser(User user, float value);
         Task<bool> userHasEnoughBalance(User user, float value);
         Task<bool> addStockToUser(User user, Company company, int amount);
         Task<bool> createStock(User user, Company company, int amount);
-        Task<bool> removeStockFromUser(User user, Company company, int amount);
+        Task<bool> removeStockFromUser(Stock stock, int amount);
         Task<List<Stock>> getStocksWithUser(User user);
         Task<List<Stock>> getStocksWithUserID(string id);
         Task<List<Stock>> getStocksWithCompany(Company company);

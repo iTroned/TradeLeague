@@ -201,6 +201,11 @@ namespace StockApplication.Controllers
             }
             return stock.amount;
         }
+        //returns current balance for current user
+        public async Task<float> getBalance()
+        {
+            return (await getCurrentUser()).balance;
+        }
 
     }
 }

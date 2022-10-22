@@ -59,6 +59,9 @@ function getStock() {
     $.get("Stock/getCurrentStockAmount", function (amount) {
         $("#current").html("Current stocks: " + amount);
     });
+    $.get("Stock/getBalance", function (bal) {
+        $("#balance").html("Current balance: " + bal + "$");
+    });
 }
 function buyStock() {
     const amount = $("#amount").val();

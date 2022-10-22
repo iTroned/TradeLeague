@@ -72,7 +72,7 @@ namespace StockApplication.Code.Handlers
                 {
                     return false;
                 }
-                if(!(await removeStockFromUser(user, company, amount)))
+                if(!(await removeStockFromUser(stock, amount)))
                 {
                     return false;
                 }
@@ -298,12 +298,16 @@ namespace StockApplication.Code.Handlers
                 return null;
             }
         }
-        public async Task<bool> deleteStock(Guid id)
+        public async Task<bool> deleteStock(Stock stock, bool save)
         {
             try
             {
-                _db.StockSet.Remove(await getStockByID(id));
-                await _db.SaveChangesAsync();
+                _db.StockSet.Remove(stock);
+                if (save)
+                {
+                    await _db.SaveChangesAsync();
+                }
+                
                 return true;
             }
             catch
@@ -367,6 +371,7 @@ namespace StockApplication.Code.Handlers
             {
                 Stock stock = new Stock(Guid.NewGuid(), amount, user.id, company.id, company.name);
                 _db.StockSet.Add(stock);
+                //System.Diagnostics.Debug.WriteLine("Creating stock " + stock.id);
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -375,22 +380,29 @@ namespace StockApplication.Code.Handlers
                 return false;
             }
         }
-        public async Task<bool> removeStockFromUser(User user, Company company, int amount)
+        public async Task<bool> removeStockFromUser(Stock stock, int amount)
         {
-            Stock stock = await getStockWithUserAndCompany(user, company);
-            if(stock == null || stock.amount < amount)
+            try
+            {
+                //Stock stock = await getStockWithUserAndCompany(user, company);
+                if (stock == null || stock.amount < amount)
+                {
+                    return false;
+                }
+                
+                int newAmount = stock.amount - amount;
+                if (newAmount == 0)
+                {
+                    return await deleteStock(stock, false);
+                }
+                stock.amount = newAmount;
+                //await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
             {
                 return false;
             }
-            int newAmount = stock.amount - amount;
-            if(newAmount == 0)
-            {
-                await deleteStock(stock.id);
-                return true;
-            }
-            stock.amount = newAmount;
-            //await _db.SaveChangesAsync();
-            return true;
 
         }
         public async Task<List<Stock>> getStocksWithUserID(Guid id)
