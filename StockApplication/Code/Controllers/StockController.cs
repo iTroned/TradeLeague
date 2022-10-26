@@ -191,7 +191,7 @@ namespace StockApplication.Controllers
         {
             return await _db.getStockWithUserAndCompany(await getCurrentUserID(), getCurrentCompanyID());
         }
-        //returns amount of shares from current stock
+        //returns amount of shares owned for current user at current company
         public async Task<int> getCurrentStockAmount()
         {
             Stock stock = await getCurrentStock();
