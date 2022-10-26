@@ -347,10 +347,11 @@ namespace StockApplication.Code.Handlers
             {
                 if(await userHasStocksWithCompany(user, company))
                 {
-                    //System.Diagnostics.Debug.WriteLine("YUP");
+                    
                     Stock stock = await getStockWithUserAndCompany(user, company);
+                    
                     //should never happen, but for safe measures
-                    if(stock == null)
+                    if (stock == null)
                     {
                         return false;
                     }
@@ -475,7 +476,21 @@ namespace StockApplication.Code.Handlers
             }
            
         }
-        
-        
+        public async Task<float> getUsersTotalValue(String id)
+        {
+            float totalValue = 0;
+            List<Stock> dbList = await getStocksWithUserID(id); //creating a list with all stocks
+            foreach(Stock stock in dbList) //iterating through list and adding value to totalValue
+            {
+                Company company = await getCompanyByID(stock.Companyid);
+                totalValue += (stock.amount* company.value);
+            }
+            totalValue += await getBalanceForUser(Guid.Parse(id)); //adding user's balance at the end and returning totalvalue
+
+            return totalValue;
+        }
+
+
+
     }
 }

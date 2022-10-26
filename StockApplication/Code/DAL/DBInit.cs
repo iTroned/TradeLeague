@@ -45,7 +45,7 @@ namespace StockApplication.Code.DAL
             float curval = start;
             for (int i = 0; i < randomArray.Length - 1; ++i)
             {
-                curval = (curval * (random.Next(800, 1200)) / 1000);
+                curval = (curval * (random.Next(8000, 12001)) / 10000F);
                 randomArray[i] = curval;
             }
             randomArray[randomArray.Length - 1] = start;

@@ -162,6 +162,10 @@ namespace StockApplication.Controllers
             return stockList;
         }
         //clears
+        public async Task<float> getUsersValue(string id)
+        {
+            return await _db.getUsersTotalValue(id);
+        }
         public void removeCurrentUser()
         {
             HttpContext.Session.SetString(SessionKeyUser, "");

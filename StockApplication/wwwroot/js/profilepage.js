@@ -7,6 +7,7 @@ function getCurrentUser() {
         formatUser(user);
         formatBalance(user);
         formatStock(user);
+        totalValue(user);
         if (user.username === "admin") {
             $("#buttons").html("");
         }
@@ -24,6 +25,11 @@ function formatBalance(user) {
     let out = user.balance + "$";
     $("#balance").html(out);
 
+}
+function totalValue(user) {
+    $.get("Stock/getUsersValue?id=" + user.id, function (data) {
+        $("#totalValue").html(data);
+    });
 }
 
 function formatStock(user) {
