@@ -44,11 +44,19 @@ function formatStock(user) {
 }
 
 function deleteUser() {
-    $.get("Stock/deleteUser", function (OK) {
-        if (OK) {
-            window.location.href = "index.html";
-        }
-    });
+    let text = "Are you sure you want to delete this user?"
+    if (confirm(text) == true) {
+        $.get("Stock/deleteUser", function (OK) {
+            if (OK) {
+                window.location.href = "index.html";
+            }
+            else {
+                window.location.href = "profilepage.html"
+            }
+        });
+
+    }
+    else { text = "You canceled" }
 }
 function editUser() {
     window.location.href = "edit.html";

@@ -12,24 +12,26 @@
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark text-white">
         <!--Brand/logo-->
-        <a class="navbar-brand" style="font-size:25px" href="#">TradeLeague</a>
+        <a class="navbar-brand">
+            <img id="logo" alt="Logo" src="TradeLeague-1 (7).png" />
+        </a>
 
         <!--Links-->
         <ul class="navbar-nav" style="font-size:18px">
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">  Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="createUser.html">  Create User</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="createCompany.html">  Create Company</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="swappage.html">  Swap account</a>
-            </li>
             <li class="nav-item active">
-                <a class="nav-link" href="companies.html">  Companies</a>
+                <a class="nav-link" href="index.html">  &nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="createUser.html">  &nbsp;&nbsp;Create User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="createCompany.html">  &nbsp;&nbsp;Create Company</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="swappage.html">  &nbsp;&nbsp;Swap account</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="companies.html">  &nbsp;&nbsp;Companies</a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto" style="font-size:18px">
@@ -41,8 +43,10 @@
     <br />
 
     <div class="main" style="margin-bottom:90px">
-        <div class="container">
+        <div class="container card bg-light">
+            <br />
             <h1>List of all the active companies</h1>
+            <br />
             <input type="text" class="form-control" placeholder="Search for Company" id="searchbar" onkeyup="search()">
             <div id="companies"></div>
             <div id="test"></div>
