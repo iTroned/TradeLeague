@@ -25,7 +25,9 @@ function chart(company) { //creating chart
                 data: company.values,
                 fill: false,
                 borderColor: 'rgb(75,192,192)',
-                tension: 0.1
+                tension: 0,
+                pointHitRadius: 100,
+                pointRadius: 5
             }]
         }
     })
