@@ -16,7 +16,7 @@ function getCompany() {
 function chart(company) { //creating chart
     const ctx = document.getElementById('companyChart').getContext('2d'); //getting context from canvas in company.html
     const labels = ["10 mins ago", "9 mins ago", "8 mins ago", "7 mins ago", "6 mins ago", "5 mins ago", "4 mins ago", "3 mins ago", "2 mins ago", "1 min ago"]; //creating set labels
-    companyChart = new Chart(ctx, { //new chart with context(ctx) and assigning data + designing
+    companyChart = new Chart(ctx, { //new chart with context(ctx) and assigning data + designing, companyChart is global variable because we need to access it in our ajax call
         type: 'line',
         data: {
             labels: labels,
