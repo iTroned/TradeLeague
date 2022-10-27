@@ -1,25 +1,22 @@
-﻿$(function () {
+﻿//code inspired from lectures
+$(function () {
     getAllCompanies();
-    //Happens every 10 seconds | problematic that it refreshes the table
-    window.setInterval(function () {
-        //getAllCompanies();
-    }, 10000);
 });
 
-function getAllCompanies() {
+function getAllCompanies() { //getting list with allCompanies
     $.get("Stock/getAllCompanies", function (allCompanies) {
         formatCompanies(allCompanies);
     });
 }
 
-function formatCompanies(companies) {
+function formatCompanies(companies) { //organizing table displaying all companies
     let out = "<table class='table table-striped' id='table'>" +
         "<tr>" +
         "<th>Name</th><th>Value</th>" +
         "</tr>";
     for (let company of companies) {
         out += "<tr>" +
-            "<td>" + '<a onclick="goToCompany(\'' + company.id + '\')">' + company.name + "</a></td>" +
+            "<td>" + '<a onclick="goToCompany(\'' + company.id + '\')">' + company.name + "</a></td>" + //onclick redirect to html displaying info about chosen company
             "<td>" + company.value + "$</td>" +
             "</tr>";
     }
@@ -27,7 +24,7 @@ function formatCompanies(companies) {
     $("#companies").html(out);
 }
     
-function goToCompany(id) {
+function goToCompany(id) { //setting Company-session and being redirected to html displaying info about company
     $.get("Stock/setCurrentCompany?id=" + id, function (OK) {
         if (OK) {
             window.location.href = "company.html";
@@ -35,7 +32,7 @@ function goToCompany(id) {
     });
 }
 
-//function from w3schools: https://www.w3schools.com/howto/howto_js_filter_table.asp
+//function from w3schools to search: https://www.w3schools.com/howto/howto_js_filter_table.asp
 function search() {
     var input = document.getElementById("searchbar");
     var filter = input.value.toUpperCase();

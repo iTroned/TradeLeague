@@ -1,10 +1,11 @@
-﻿$(function () {
-    getAllUsers();
+﻿//inspired by lectures
+$(function () {
+    getAllUsers(); 
     getAllCompanies();
 });
 
 function getAllUsers() {
-    $.get("Stock/getAllUsers", function (allUsers) {
+    $.get("Stock/getAllUsers", function (allUsers) { 
         formatUsers(allUsers);
     });
 }

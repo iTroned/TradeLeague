@@ -1,9 +1,9 @@
 ﻿$(function () {
-    getCurrentUser();
+    getCurrentUser(); //get current user on page load
 });
 
 function getCurrentUser() {
-    $.get("Stock/getCurrentUser", function (user) {
+    $.get("Stock/getCurrentUser", function (user) { //calling controller for current user-object
         formatUser(user);
         formatBalance(user);
         formatStock(user);
@@ -14,26 +14,26 @@ function getCurrentUser() {
     });
 }
 
-function formatUser(user) {
+function formatUser(user) { //formatting welcome message
     let out = "" + user.username;
     $("#name").html(out);
 
 }
 
 
-function formatBalance(user) {
+function formatBalance(user) { //display user.balance in balance-div.
     let out = user.balance + "$";
     $("#balance").html(out);
 
 }
-function totalValue(user) {
+function totalValue(user) { //getting TotalValue for user, displaying in totalValue-div
     $.get("Stock/getUsersValueByID?id=" + user.id, function (data) {
         $("#totalValue").html(data.value + "$");
     });
 }
 
-function formatStock(user) {
-    $.get("Stock/getStocksForUser?id=" + user.id, function (stockList) {
+function formatStock(user) { //formatting table with owned stocks
+    $.get("Stock/getStocksForUser?id=" + user.id, function (stockList) { //getting user's owned stocks
         let out = "<table class='table table-striped'>" +
             "<tr>" +
             "<th>Stock name</th><th>Shares</th><th>Value</th>" +
