@@ -21,5 +21,6 @@ namespace StockApplication.Code
             this.amount = amount;
             this.value = value;
         }
+
     }
 }

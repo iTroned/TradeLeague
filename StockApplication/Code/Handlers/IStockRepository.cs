@@ -25,7 +25,6 @@ namespace StockApplication.Code.Handlers
         Task<bool> deleteStock(Stock stock, bool save);
         void addBalanceToUser(User user, float value);
         Task<bool> removeBalanceFromUser(User user, float value);
-        Task<bool> userHasEnoughBalance(User user, float value);
         Task<bool> addStockToUser(User user, Company company, int amount);
         Task<bool> createStock(User user, Company company, int amount);
         Task<bool> removeStockFromUser(Stock stock, int amount);

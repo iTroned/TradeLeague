@@ -554,6 +554,7 @@ namespace StockApplication.Code.Handlers
             {
                 stockList.Add(await getUsersValueByID(user.id.ToString())); //returning user name with total amount of shares owned and total value
             }
+            stockList.Sort(new StockNameComparer());
              return stockList;
         }
 
