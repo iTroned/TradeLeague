@@ -6,11 +6,11 @@ for details on configuring this project to bundle and minify static web assets. 
     color:white;
 }
 
-.box:hover {
-    color: #065fc7;
-    text-decoration: none;
-    transition: .3s;
-}
+    .box:hover {
+        color: #80b0ff;
+        text-decoration: none;
+        transition: .5s;
+    }
 
 a.navbar-brand {
   white-space: normal;

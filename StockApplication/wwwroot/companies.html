@@ -18,22 +18,32 @@
 
         <!--Links-->
         <ul class="navbar-nav" style="font-size:18px">
+            <!--Homepage-->
             <li class="nav-item active">
                 <a class="nav-link" href="index.html">  &nbsp;&nbsp;Home</a>
             </li>
+            <!--Create user-->
             <li class="nav-item">
                 <a class="nav-link" href="createUser.html">  &nbsp;&nbsp;Create User</a>
             </li>
+            <!--Create company-->
             <li class="nav-item">
                 <a class="nav-link" href="createCompany.html">  &nbsp;&nbsp;Create Company</a>
             </li>
+            <!--Swappage-->
             <li class="nav-item">
                 <a class="nav-link" href="swappage.html">  &nbsp;&nbsp;Swap account</a>
             </li>
+            <!--Company list-->
             <li class="nav-item">
                 <a class="nav-link" href="companies.html">  &nbsp;&nbsp;Companies</a>
             </li>
+            <!--Leaderboard-->
+            <li class="nav-item">
+                <a class="nav-link" href="leaderboard.html">  &nbsp;&nbsp;Leaderboard</a>
+            </li>
         </ul>
+        <!--Profilepage-->
         <ul class="navbar-nav ml-auto" style="font-size:18px">
             <li class="nav-item">
                 <a class="nav-link" href="profilepage.html"><i class="fa fa-user-circle"></i>    Profile</a>
@@ -41,16 +51,19 @@
         </ul>
     </nav>
     <br />
+    <br />
 
     <!--Main-->
-    <div class="main" style="margin-bottom:90px">
+    <div class="main" style="margin-bottom:25vh">
+        <!--Div listing all companies-->
         <div class="container card bg-light">
             <br />
             <h1>List of all the active companies</h1>
             <br />
+            <!--Searchbar results are retrieved from javascript function search()-->
             <input type="text" class="form-control" placeholder="Search for Company" id="searchbar" onkeyup="search()">
+            <!--Listing of all companies are retrieved from javascript function formatCompanies(companies)-->
             <div id="companies"></div>
-            <div id="test"></div>
         </div>
     </div>
     <br />
@@ -59,24 +72,23 @@
     <footer class="page-footer font-small bg-dark text-white pt-2" style="position:absolute;bottom:0px;width:100%">
         <div class="container-fluid text-center text-md-left">
             <div class="row">
+
+                <!--Column 1-->
                 <div class="col-md-6 mt-md-1 mt-3">
-
                     <h5 class="text-uppercase font-weight-bold">Contact us</h5>
-
                     <p>
+                        <!--Social media icons with links -->
                         <a href="https://www.facebook.com" target="_blank" title="Facebook"><i class="fa fa-facebook-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <a href="https://www.twitter.com" target="_blank" title="Twitter"><i class="fa fa-twitter-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <a href="https://www.instagram.com" target="_blank" title="Instagram"><i class="fa fa-instagram" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <br />
                     </p>
                     <h class="text-uppercase font-weight">Email: TradeLeague@gmail.com</h>
-
                 </div>
-
                 <hr class="clearfix w-100 d-md-none pb-3">
 
+                <!--Column 2-->
                 <div class="col-md-6 mb-md-0 mb-3">
-
                     <h5 class="text-uppercase font-weight-bold">About the page:</h5>
                     <p>
                         <i class="text-warning">WARNING.</i> This project is exclusively for school and we do not condone gambling in real life. All currency on the page is fictional and does not relate to anything in real life.
@@ -84,6 +96,8 @@
                 </div>
             </div>
         </div>
+
+        <!--Copyright at bottom-->
         <div class="footer-copyright text-center py-1">
             © 2022 Copyright: TradeLeague
         </div>

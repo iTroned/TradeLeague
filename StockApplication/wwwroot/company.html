@@ -19,22 +19,32 @@
 
         <!--Links-->
         <ul class="navbar-nav" style="font-size:18px">
+            <!--Homepage-->
             <li class="nav-item active">
                 <a class="nav-link" href="index.html">  &nbsp;&nbsp;Home</a>
             </li>
+            <!--Create user-->
             <li class="nav-item">
                 <a class="nav-link" href="createUser.html">  &nbsp;&nbsp;Create User</a>
             </li>
+            <!--Create company-->
             <li class="nav-item">
                 <a class="nav-link" href="createCompany.html">  &nbsp;&nbsp;Create Company</a>
             </li>
+            <!--Swappage-->
             <li class="nav-item">
                 <a class="nav-link" href="swappage.html">  &nbsp;&nbsp;Swap account</a>
             </li>
+            <!--Company list-->
             <li class="nav-item">
                 <a class="nav-link" href="companies.html">  &nbsp;&nbsp;Companies</a>
             </li>
+            <!--Leaderboard-->
+            <li class="nav-item">
+                <a class="nav-link" href="leaderboard.html">  &nbsp;&nbsp;Leaderboard</a>
+            </li>
         </ul>
+        <!--Profilepage-->
         <ul class="navbar-nav ml-auto" style="font-size:18px">
             <li class="nav-item">
                 <a class="nav-link" href="profilepage.html"><i class="fa fa-user-circle"></i>    Profile</a>
@@ -42,26 +52,37 @@
         </ul>
     </nav>
     <br />
+    <br />
 
     <!--Main-->
-    <div class="main" style="margin-bottom:90px">
+    <div class="main" style="margin-bottom:25vh">
         <div class="container">
+            <!--Header retrieved from javascript function getCompany()-->
             <h1 id="name"></h1>
             <div class="container">
+                <!--Balance retrieved from javascript function getstock()-->
                 <div id="balance"></div>
+                <!--Current owned stocks retrieved from javascript function getstock()-->
                 <div id="current"></div>
+                <!--Input form for choosing amount of stocks either to sell or buy, max 100 min 1-->
                 <input type="number" id="amount" min="1" max="100" value="1" />
+                <!--Buy and sell button both sending values to script-->
                 <button class="btn btn-success" id="buy" onclick="buyStock()">Buy</button>
                 <button class="btn btn-danger" id="sell" onclick="sellStock()">Sell</button>
                 <div id="message"></div>
 
             </div>
 
+            <!--Chart-->
             <div id="chart">
+                <!--Chart retrieved from javascript function chartCompany()-->
                 <canvas id="companyChart"></canvas>
             </div>
+
+            <!--Value display-->
             <div class="container" id="info">
                 <div class="container">
+                    <!--Information retrieved from javascipt function formatCompany(company)-->
                     <div id="information"></div>
                 </div>
             </div>
@@ -74,24 +95,23 @@
     <footer class="page-footer font-small bg-dark text-white pt-2" style="position:absolute;bottom:0px;width:100%">
         <div class="container-fluid text-center text-md-left">
             <div class="row">
+
+                <!--Column 1-->
                 <div class="col-md-6 mt-md-1 mt-3">
-
                     <h5 class="text-uppercase font-weight-bold">Contact us</h5>
-
                     <p>
+                        <!--Social media icons with links -->
                         <a href="https://www.facebook.com" target="_blank" title="Facebook"><i class="fa fa-facebook-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <a href="https://www.twitter.com" target="_blank" title="Twitter"><i class="fa fa-twitter-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <a href="https://www.instagram.com" target="_blank" title="Instagram"><i class="fa fa-instagram" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <br />
                     </p>
                     <h class="text-uppercase font-weight">Email: TradeLeague@gmail.com</h>
-
                 </div>
-
                 <hr class="clearfix w-100 d-md-none pb-3">
 
+                <!--Column 2-->
                 <div class="col-md-6 mb-md-0 mb-3">
-
                     <h5 class="text-uppercase font-weight-bold">About the page:</h5>
                     <p>
                         <i class="text-warning">WARNING.</i> This project is exclusively for school and we do not condone gambling in real life. All currency on the page is fictional and does not relate to anything in real life.
@@ -99,6 +119,8 @@
                 </div>
             </div>
         </div>
+
+        <!--Copyright at bottom-->
         <div class="footer-copyright text-center py-1">
             © 2022 Copyright: TradeLeague
         </div>

@@ -18,22 +18,32 @@
 
         <!--Links-->
         <ul class="navbar-nav" style="font-size:18px">
+            <!--Homepage-->
             <li class="nav-item active">
                 <a class="nav-link" href="index.html">  &nbsp;&nbsp;Home</a>
             </li>
+            <!--Create user-->
             <li class="nav-item">
                 <a class="nav-link" href="createUser.html">  &nbsp;&nbsp;Create User</a>
             </li>
+            <!--Create company-->
             <li class="nav-item">
                 <a class="nav-link" href="createCompany.html">  &nbsp;&nbsp;Create Company</a>
             </li>
+            <!--Swappage-->
             <li class="nav-item">
                 <a class="nav-link" href="swappage.html">  &nbsp;&nbsp;Swap account</a>
             </li>
+            <!--Company list-->
             <li class="nav-item">
                 <a class="nav-link" href="companies.html">  &nbsp;&nbsp;Companies</a>
             </li>
+            <!--Leaderboard-->
+            <li class="nav-item">
+                <a class="nav-link" href="leaderboard.html">  &nbsp;&nbsp;Leaderboard</a>
+            </li>
         </ul>
+        <!--Profilepage-->
         <ul class="navbar-nav ml-auto" style="font-size:18px">
             <li class="nav-item">
                 <a class="nav-link" href="profilepage.html"><i class="fa fa-user-circle"></i>    Profile</a>
@@ -43,18 +53,22 @@
     <br />
 
     <!--Main-->
-    <div class="main" style="margin-bottom:90px">
+    <div class="main" style="margin-bottom:25vh">
         <div class="container">
+            <!--Header-->
             <h1> Welcome to your profile: <i id="name" class="text-uppercase"></i> </h1>
         </div>
         <br />
+        <!--Top div containing 2 columns-->
         <div class="container p-3 mb-2 bg-dark card">
+            <!--Column 1-->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class=" card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class=" row no-gutters align-items-center">
                             <div class="text-xs font-weight-bold text-primary text-uppercase">Balance (live): <i class="fa fa-money"></i></div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <!--Getting the balance from the javascript function formatBalance()-->
                                 <p1 id="balance">"" <i class="fa fa-money"></i>  </p1>
                             </div>
                         </div>
@@ -62,12 +76,14 @@
 
                 </div>
             </div>
+            <!--Column 2 positioned to the right-->
             <div class="col-xl-3 col-md-6 mb-4" style="position:absolute; right:0;">
                 <div class=" card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class=" row no-gutters align-items-center">
                             <div class="text-xs font-weight-bold text-primary text-uppercase">Balance change:</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <!--Value retrieved from javascript function totalValue()-->
                                 <div id="totalValue"></div>
                             </div>
 
@@ -81,12 +97,15 @@
         <br />
         <br />
         <br>
+
+        <!--Div displaying owned stocks (if owned), retrieving from javascript function formatStock() -->
         <div class="container card bg-light">
             <h1>Your funds</h1>
             <div id="ownedstock"></div>
         </div>
         <br />
         <div id="buttons" class="container">
+            <!--Two buttons displayed on all users except admin, edit and delete buttons.-->
             <button class="btn btn-primary" onclick="editUser()">Edit User</button>
             <button class="btn btn-danger" onclick="deleteUser()">Delete User</button>
         </div>
@@ -97,24 +116,23 @@
     <footer class="page-footer font-small bg-dark text-white pt-2" style="position:absolute;bottom:0px;width:100%">
         <div class="container-fluid text-center text-md-left">
             <div class="row">
+
+                <!--Column 1-->
                 <div class="col-md-6 mt-md-1 mt-3">
-
                     <h5 class="text-uppercase font-weight-bold">Contact us</h5>
-
                     <p>
+                        <!--Social media icons with links -->
                         <a href="https://www.facebook.com" target="_blank" title="Facebook"><i class="fa fa-facebook-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <a href="https://www.twitter.com" target="_blank" title="Twitter"><i class="fa fa-twitter-square" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <a href="https://www.instagram.com" target="_blank" title="Instagram"><i class="fa fa-instagram" style="font-size: 30px; padding-left: 10px; padding-right: 10px"></i></a>
                         <br />
                     </p>
                     <h class="text-uppercase font-weight">Email: TradeLeague@gmail.com</h>
-
                 </div>
-
                 <hr class="clearfix w-100 d-md-none pb-3">
 
+                <!--Column 2-->
                 <div class="col-md-6 mb-md-0 mb-3">
-
                     <h5 class="text-uppercase font-weight-bold">About the page:</h5>
                     <p>
                         <i class="text-warning">WARNING.</i> This project is exclusively for school and we do not condone gambling in real life. All currency on the page is fictional and does not relate to anything in real life.
@@ -122,6 +140,8 @@
                 </div>
             </div>
         </div>
+
+        <!--Copyright at bottom-->
         <div class="footer-copyright text-center py-1">
             © 2022 Copyright: TradeLeague
         </div>
