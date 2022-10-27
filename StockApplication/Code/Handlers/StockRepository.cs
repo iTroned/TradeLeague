@@ -383,11 +383,8 @@ namespace StockApplication.Code.Handlers
             
         }
 
-        //FJERNE?
-        public async Task<bool> userHasEnoughBalance(User user, float value)
-        {
-            return await getBalanceForUser(user.id) >= value;
-        }
+        
+        
 
         //add stock to user-entity
         public async Task<bool> addStockToUser(User user, Company company, int amount) //amount of shares from a Company the User wants
