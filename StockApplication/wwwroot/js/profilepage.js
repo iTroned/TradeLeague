@@ -50,9 +50,9 @@ function formatStock(user) { //formatting table with owned stocks
     });
 }
 
-function deleteUser() {
+function deleteUser() { //deleteUser function
     let text = "Are you sure you want to delete this user?"
-    if (confirm(text) == true) {
+    if (confirm(text) == true) { //confirm box to make sure user dosen't delete on accident
         $.get("Stock/deleteUser", function (OK) {
             if (OK) {
                 window.location.href = "index.html";
