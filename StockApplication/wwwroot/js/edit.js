@@ -17,7 +17,7 @@ function editUser() {
     };
     $.post("Stock/updateUser", user, function (OK) { //tries to update, if ok redirect to html, else error message
         if (OK) {
-            window.location.href = 'index.html';
+            window.location.href = 'profilepage.html';
         }
         else {
             $("#feil").html("Something went wrong");
