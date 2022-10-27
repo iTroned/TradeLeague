@@ -34,11 +34,11 @@ function formatUsers(users) { //formatting list of users in a table
 function search() {
     var input = document.getElementById("searchbar");
     var filter = input.value.toUpperCase();
-    var table = document.getElementById("table");
+    var table = document.getElementById("tableSort");
     var tr = table.getElementsByTagName("tr");
 
     for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
+        td = tr[i].getElementsByTagName("td")[1];
         if (td) {
             txtValue = td.textContent || td.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
