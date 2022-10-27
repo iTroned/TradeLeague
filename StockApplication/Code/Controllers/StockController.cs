@@ -27,6 +27,7 @@ namespace StockApplication.Controllers
         {
             return await _db.getUserByID(Guid.Parse(id));
         }
+
         //returns a user by a given username
         public async Task<User> getUserByUsername(string username)
         {
@@ -38,6 +39,7 @@ namespace StockApplication.Controllers
         {
             return await _db.getAllUsers();
         }
+
         //update a user, does not work for admin
         public async Task<bool> updateUser(User editUser)
         {
@@ -47,6 +49,7 @@ namespace StockApplication.Controllers
             }
             return await _db.updateUser(editUser);
         }
+
         //creates a new user with a given name
         public async Task<bool> createUser(string username)
         {
@@ -58,26 +61,31 @@ namespace StockApplication.Controllers
             }
             return created;
         }
+
         //checks if username is taken | WIP when creating user and changing name | client side only
         public async Task<bool> checkUsername(string username)
         {
             return await _db.checkUsername(username);
         }
+
         //creates a new company
         public async Task<bool> createCompany(string name)
         {
             return await _db.createCompany(name);
         }
+
         //gets a single company by its id
         public async Task<Company> getCompanyByID(string id)
         {
             return await _db.getCompanyByID(Guid.Parse(id));
         }
+
         //returns a list of all companies registeres
         public async Task<List<Company>> getAllCompanies()
         {
             return await _db.getAllCompanies();
         }
+
         //deletets the user in the session. cannot delete admin
         public async Task<bool> deleteUser()
         {
@@ -91,8 +99,8 @@ namespace StockApplication.Controllers
             }
             return false;
         }
-        //not yet implemented
-        public async Task<bool> deleteCompany(string id)
+        
+        public async Task<bool> deleteCompany(string id) //not yet implemented
         {
             return false;
             //return await _db.deleteCompany(id);
@@ -106,28 +114,33 @@ namespace StockApplication.Controllers
             //return await getCurrentCompany() != null;
             return true;
         }
+
         //gets the company id saved in session
         public string getCurrentCompanyID()
         {
             return HttpContext.Session.GetString(SessionKeyCompany);
         }
+
         //gets company linked to id in session
         public async Task<Company> getCurrentCompany()
         {
             return await _db.getCompanyByID(Guid.Parse(getCurrentCompanyID()));
         }
+
         //clears 
         public void removeCurrentCompany()
         {
             HttpContext.Session.SetString(SessionKeyCompany, "");
         }
         private const string SessionKeyUser = "_currentUser";
+        
         //sets a new user to the session
         public bool setCurrentUser(string id)
         {
             HttpContext.Session.SetString(SessionKeyUser, id);
             return true;
         }
+
         //returns current user id, after setting  a standard in some cases
         public async Task<string> getCurrentUserID()
 
@@ -145,35 +158,19 @@ namespace StockApplication.Controllers
                 return admin.id.ToString();
             }
         }
+
         //returns current user
         public async Task<User> getCurrentUser()
         {
             return await _db.getUserByID(Guid.Parse(await getCurrentUserID()));
         }
-        //returns all stocks for certain user
-        public async Task<List<StockName>> getStocksForUser(string id)
-        {
-            List<Stock> dbList = await _db.getStocksWithUserID(await getCurrentUserID());
-            List<StockName> stockList = new List<StockName>();
-            foreach(Stock stock in dbList)
-            {
-                stockList.Add(new StockName(stock.companyName, stock.amount, await _db.getStockValue(stock)));
-            }
-            return stockList;
-        }
-        //clears
-        public async Task<List<StockName>> getUsersValue() //list with total value for every user
-        {
-            return await _db.getAllUsersTotalValue();
-        }
-        public async Task<StockName> getUsersValueByID(String id)
-        {
-            return await _db.getUsersValueByID(id);
-        }
+
+        //removes current user
         public void removeCurrentUser()
         {
             HttpContext.Session.SetString(SessionKeyUser, "");
         }
+
         //custom session | not used
         public void setCustomSession(string sessionName, string value)
         {
@@ -184,21 +181,51 @@ namespace StockApplication.Controllers
             return HttpContext.Session.GetString(sessionName);
         }
 
+        //returns list of stocks certain user own
+        public async Task<List<StockName>> getStocksForUser(string id)
+        {
+            List<Stock> dbList = await _db.getStocksWithUserID(await getCurrentUserID());
+            List<StockName> stockList = new List<StockName>();
+            foreach(Stock stock in dbList)
+            {
+                stockList.Add(new StockName(stock.companyName, stock.amount, await _db.getStockValue(stock)));
+            }
+            return stockList;
+        }
+
+        //returns list with total value for every user
+        public async Task<List<StockName>> getUsersValue() 
+        {
+            return await _db.getAllUsersTotalValue();
+        }
+
+        //get StockName object with specific user's value
+        public async Task<StockName> getUsersValueByID(String id)
+        {
+            return await _db.getUsersValueByID(id);
+        }
+
+       
+        
+
         //tries to buy stock for user and company in session
         public async Task<bool> buyStock(int amount)
         {
             return await _db.tryToBuyStockForUser(await getCurrentUserID(), getCurrentCompanyID(), amount);
         }
+
         //tries to sell stock for user and company in session
         public async Task<bool> sellStock(int amount)
         {
             return await _db.tryToSellStockForUser(await getCurrentUserID(), getCurrentCompanyID(), amount);
         }
+
         //gets the current stock from user and company in session
         public async Task<Stock> getCurrentStock()
         {
             return await _db.getStockWithUserAndCompany(await getCurrentUserID(), getCurrentCompanyID());
         }
+
         //returns amount of shares owned for current user at current company
         public async Task<int> getCurrentStockAmount()
         {
@@ -209,6 +236,7 @@ namespace StockApplication.Controllers
             }
             return stock.amount;
         }
+
         //returns current balance for current user
         public async Task<float> getBalance()
         {
