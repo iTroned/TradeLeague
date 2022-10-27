@@ -10,14 +10,16 @@ namespace StockApplication.Code
     {
         public string name { get; set; }
         public int amount { get; set; }
-        public StockName() : this(null, 0)
+        public float value { get; set; }
+        public StockName() : this(null, 0, 0)
         {
 
         }
-        public StockName(string name, int amount)
+        public StockName(string name, int amount, float value)
         {
             this.name = name;
             this.amount = amount;
+            this.value = value;
         }
     }
 }

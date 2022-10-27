@@ -27,8 +27,8 @@ function formatBalance(user) {
 
 }
 function totalValue(user) {
-    $.get("Stock/getUsersValue?id=" + user.id, function (data) {
-        $("#totalValue").html(data);
+    $.get("Stock/getUsersValueByID?id=" + user.id, function (data) {
+        $("#totalValue").html(data.value + "$");
     });
 }
 
@@ -36,12 +36,13 @@ function formatStock(user) {
     $.get("Stock/getStocksForUser?id=" + user.id, function (stockList) {
         let out = "<table class='table table-striped'>" +
             "<tr>" +
-            "<th>Stock name</th><th>(Shares)</th>" +
+            "<th>Stock name</th><th>Shares</th><th>Value</th>" +
             "</tr>";
         for (let stock of stockList) {
             out += "<tr>" +
                 "<td>" + stock.name + "</td>" +
                 "<td>" + stock.amount + "</td>" +
+                "<td>" + stock.value + "$</td>" +
                 "</tr>";
         }
         

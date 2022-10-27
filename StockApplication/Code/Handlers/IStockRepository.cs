@@ -35,7 +35,9 @@ namespace StockApplication.Code.Handlers
         Task<Stock> getStockWithUserAndCompany(User user, Company company);
         Task<Stock> getStockWithUserAndCompany(string uid, string cid);
         Task<bool> userHasStocksWithCompany(User user, Company company);
-        Task<float> getUsersTotalValue(String id);
+        Task<List<StockName>> getAllUsersTotalValue();
+        Task<StockName> getUsersValueByID(String id);
+        Task<float> getStockValue(Stock stock);
         Task<List<Stock>> getAllStocks();
         Task updateValues();
     }

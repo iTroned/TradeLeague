@@ -476,21 +476,41 @@ namespace StockApplication.Code.Handlers
             }
            
         }
-        public async Task<float> getUsersTotalValue(String id)
+        public async Task<List<StockName>> getAllUsersTotalValue()
         {
-            float totalValue = 0;
-            List<Stock> dbList = await getStocksWithUserID(id); //creating a list with all stocks
-            foreach(Stock stock in dbList) //iterating through list and adding value to totalValue
+            
+            List<User> userList = await getAllUsers();
+            List<StockName> stockList = new List<StockName>();
+            foreach (User user in userList) //for each user, go through all owned stocks and add to the value
             {
-                Company company = await getCompanyByID(stock.Companyid);
-                totalValue += (stock.amount* company.value);
+                stockList.Add(await getUsersValueByID(user.id.ToString())); //returning user name with total amount of shares owned and total value
             }
-            totalValue += await getBalanceForUser(Guid.Parse(id)); //adding user's balance at the end and returning totalvalue
-
-            return totalValue;
+             return stockList;
         }
 
+        public async Task<float> getStockValue(Stock stock)
+        {
+            float value = 0;
+            Company company = await getCompanyByID(stock.Companyid);
+            value = (stock.amount * company.value);
+            return value;
+        }
 
-
+        public async Task<StockName> getUsersValueByID(String id)
+        {
+            float totalValue = 0; //total value 
+            int amount = 0; //amount of shares
+            User user = await getUserByID(Guid.Parse(id));
+            List<Stock> dbList = await getStocksWithUserID(id);
+            foreach (Stock stock in dbList) //iterating through list and adding value to totalValue
+            {
+                amount += stock.amount;
+                totalValue += (await getStockValue(stock));
+            }
+            List<StockName> stockList = new List<StockName>();
+            totalValue += user.balance; //adding user's balance at the end and returning totalvalue
+            StockName stockName = new StockName(user.username, amount, totalValue);
+            return stockName;
+        }
     }
 }

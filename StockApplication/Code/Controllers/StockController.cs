@@ -157,14 +157,18 @@ namespace StockApplication.Controllers
             List<StockName> stockList = new List<StockName>();
             foreach(Stock stock in dbList)
             {
-                stockList.Add(new StockName(stock.companyName, stock.amount));
+                stockList.Add(new StockName(stock.companyName, stock.amount, await _db.getStockValue(stock)));
             }
             return stockList;
         }
         //clears
-        public async Task<float> getUsersValue(string id)
+        public async Task<List<StockName>> getUsersValue() //list with total value for every user
         {
-            return await _db.getUsersTotalValue(id);
+            return await _db.getAllUsersTotalValue();
+        }
+        public async Task<StockName> getUsersValueByID(String id)
+        {
+            return await _db.getUsersValueByID(id);
         }
         public void removeCurrentUser()
         {
