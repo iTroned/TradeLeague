@@ -1,42 +1,42 @@
 # StockApplication
 
-Locations for all files:
+Locations for all files:<br/>
 
-StockApplication/Program.cs
-StockApplication/Startup.cs
+StockApplication/Program.cs <br/>
+StockApplication/Startup.cs <br/>
 
 VIEWS: <br/>
-StockApplication/wwwroot/companies.html -> javascript: StockApplication/wwwroot/js/companies.js
-StockApplication/wwwroot/company.html -> javascript: StockApplication/wwwroot/js/chartCompany.js
-StockApplication/wwwroot/createCompany.html -> javascript: StockApplication/wwwroot/js/createCompany.js
-StockApplication/wwwroot/createUser.html -> javascript: StockApplication/wwwroot/js/createUser.js
-StockApplication/wwwroot/edit.html -> javascript: StockApplication/wwwroot/js/edit.js
-StockApplication/wwwroot/index.html -> 
-StockApplication/wwwroot/leaderboard.html -> javascript: StockApplication/wwwroot/js/leaderboard.js
-StockApplication/wwwroot/profilepage.html -> javascript: StockApplication/wwwroot/js/profilepage.js
-StockApplication/wwwroot/swappage.html -> javascript: StockApplication/wwwroot/js/swappage.js
+StockApplication/wwwroot/companies.html -> javascript: StockApplication/wwwroot/js/companies.js <br/>
+StockApplication/wwwroot/company.html -> javascript: StockApplication/wwwroot/js/chartCompany.js <br/>
+StockApplication/wwwroot/createCompany.html -> javascript: StockApplication/wwwroot/js/createCompany.js <br/> 
+StockApplication/wwwroot/createUser.html -> javascript: StockApplication/wwwroot/js/createUser.js <br/>
+StockApplication/wwwroot/edit.html -> javascript: StockApplication/wwwroot/js/edit.js <br/>
+StockApplication/wwwroot/index.html ->  <br/>
+StockApplication/wwwroot/leaderboard.html -> javascript: StockApplication/wwwroot/js/leaderboard.js <br/>
+StockApplication/wwwroot/profilepage.html -> javascript: StockApplication/wwwroot/js/profilepage.js <br/> 
+StockApplication/wwwroot/swappage.html -> javascript: StockApplication/wwwroot/js/swappage.js <br/> 
 
 
-MODEL:
-StockApplication/Code/Stock.cs
-StockApplication/Code/User.cs
-StockApplication/Code/Company.cs
+MODEL: <br/>
+StockApplication/Code/Stock.cs <br/> 
+StockApplication/Code/User.cs <br/> 
+StockApplication/Code/Company.cs <br/>
 
-StockApplication/Code/StockName.cs
-StockApplication/Code/Stock.cs
+StockApplication/Code/StockName.cs <br/> 
+StockApplication/Code/Stock.cs <br/>
 
-BACKGROUND-SERVICE (VALUE UPDATER):
-StockApplication/Code/ValueUpdater.cs
+BACKGROUND-SERVICE (VALUE UPDATER): <br/>
+StockApplication/Code/ValueUpdater.cs <br/>
+
+ 
+CONTROLLER: <br/>
+StockApplication/Code/Controllers/StockController.cs <br/>
 
 
-CONTROLLER:
-StockApplication/Code/Controllers/StockController.cs
+DATA ACCESS LAYER: <br/>
 
-
-DATA ACCESS LAYER:
-
-StockApplication/Code/DAL/DBInit.cs
-StockApplication/Code/DAL/StockContext.cs
-StockApplication/Code/DAL/StockRepository.cs
-StockApplication/Code/DAL/IStockRepository.cs
+StockApplication/Code/DAL/DBInit.cs <br/> 
+StockApplication/Code/DAL/StockContext.cs <br/> 
+StockApplication/Code/DAL/StockRepository.cs <br/>
+StockApplication/Code/DAL/IStockRepository.cs <br/>
 
