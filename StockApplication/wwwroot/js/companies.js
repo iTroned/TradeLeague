@@ -16,7 +16,7 @@ function formatCompanies(companies) { //organizing table displaying all companie
         "</tr>";
     for (let company of companies) {
         out += "<tr>" +
-            "<td>" + '<a onclick="goToCompany(\'' + company.id + '\')">' + company.name + "</a></td>" + //onclick redirect to html displaying info about chosen company
+            "<td>" + '<a class="link-primary" onclick="goToCompany(\'' + company.id + '\')">' + company.name + "</a></td>" + //onclick redirect to html displaying info about chosen company
             "<td>" + company.value + "$</td>" +
             "</tr>";
     }
