@@ -5,7 +5,7 @@ Locations for all files:
 StockApplication/Program.cs
 StockApplication/Startup.cs
 
-VIEWS:
+VIEWS: <br/>
 StockApplication/wwwroot/companies.html -> javascript: StockApplication/wwwroot/js/companies.js
 StockApplication/wwwroot/company.html -> javascript: StockApplication/wwwroot/js/chartCompany.js
 StockApplication/wwwroot/createCompany.html -> javascript: StockApplication/wwwroot/js/createCompany.js
