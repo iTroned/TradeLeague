@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 
 
-namespace StockApplication.Code.Handlers
+namespace StockApplication.Code.DAL
 {
     public class StockRepository : IStockRepository
     //code inspired by lectures and Entity framework documentation: https://learn.microsoft.com/en-us/ef/
@@ -65,7 +65,7 @@ namespace StockApplication.Code.Handlers
         {
             try
             {
-                if (amount <= 0) //if user try to buy 0 or less, return false
+                if (amount <= 0) //if user try to sell 0 or less, return false
                 {
                     return false;
                 }

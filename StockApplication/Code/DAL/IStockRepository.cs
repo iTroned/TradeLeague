@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StockApplication.Code.Handlers
+namespace StockApplication.Code.DAL
 {
     public interface IStockRepository
     {
