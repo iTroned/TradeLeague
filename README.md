@@ -1,5 +1,19 @@
 # StockApplication
 
+
+
+
+
+1. Create your user!
+
+2. Go to Company list!
+
+3. Buy your shares!
+
+4. Check the leaderboard!
+
+
+
 Locations for all files:<br/>
 
 StockApplication/Program.cs <br/>
