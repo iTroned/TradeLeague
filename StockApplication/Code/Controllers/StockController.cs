@@ -51,9 +51,9 @@ namespace StockApplication.Controllers
         }
 
         //creates a new user with a given name
-        public async Task<bool> CreateUser(string username)
+        public async Task<bool> CreateUser(string username, string password)
         {
-            bool created = await _db.CreateUser(username);
+            bool created = await _db.CreateUser(username, password);
             if (created)
             {
                 User user = await _db.GetUserByUsername(username);
@@ -204,69 +204,69 @@ namespace StockApplication.Controllers
             }
         }
 
-        public bool logIn(string username, string password)
+        public async Task<bool> LogIn(string username, string password)
         {
-
+            return await _db.LogIn(username, password);
         }
         //custom session | not used
-        public void setCustomSession(string sessionName, string value)
+        public void SetCustomSession(string sessionName, string value)
         {
             HttpContext.Session.SetString(sessionName, value);
         }
-        public string getCustomSession(string sessionName)
+        public string GetCustomSession(string sessionName)
         {
             return HttpContext.Session.GetString(sessionName);
         }
 
         //returns list of stocks certain user own
-        public async Task<List<StockName>> getStocksForUser(string id)
+        public async Task<List<StockName>> GetStocksForUser(string id)
         {
-            List<Stock> dbList = await _db.getStocksWithUserID(await getCurrentUserID());
+            List<Stock> dbList = await _db.GetStocksWithUserID(await GetCurrentUserID());
             List<StockName> stockList = new List<StockName>();
             foreach(Stock stock in dbList)
             {
-                stockList.Add(new StockName(stock.companyName, stock.amount, await _db.getStockValue(stock)));
+                stockList.Add(new StockName(stock.companyName, stock.amount, await _db.GetStockValue(stock)));
             }
             return stockList;
         }
 
         //returns list with total value for every user
-        public async Task<List<StockName>> getUsersValue() 
+        public async Task<List<StockName>> GetUsersValue() 
         {
-            return await _db.getAllUsersTotalValue();
+            return await _db.GetAllUsersTotalValue();
         }
 
         //get StockName object with specific user's value
         public async Task<StockName> getUsersValueByID(String id)
         {
-            return await _db.getUsersValueByID(id);
+            return await _db.GetUsersValueByID(id);
         }
 
        
         
 
         //tries to buy stock for user and company in session
-        public async Task<bool> buyStock(int amount)
+        public async Task<bool> BuyStock(int amount)
         {
-            return await _db.tryToBuyStockForUser(await getCurrentUserID(), getCurrentCompanyID(), amount);
+            return await _db.TryToBuyStockForUser(await GetCurrentUserID(), GetCurrentCompanyID(), amount);
         }
 
         //tries to sell stock for user and company in session
-        public async Task<bool> sellStock(int amount)
+        public async Task<bool> SellStock(int amount)
         {
-            return await _db.tryToSellStockForUser(await getCurrentUserID(), getCurrentCompanyID(), amount);
+            return await _db.TryToSellStockForUser(await GetCurrentUserID(), GetCurrentCompanyID(), amount);
         }
 
         //gets the current stock from user and company in session
-        public async Task<Stock> getCurrentStock()
+        public async Task<Stock> GetCurrentStock()
         {
-            return await _db.getStockWithUserAndCompany(await getCurrentUserID(), getCurrentCompanyID());
+            return await _db.GetStockWithUserAndCompany(await GetCurrentUserID(), GetCurrentCompanyID());
         }
 
         //returns amount of shares owned for current user at current company
-        public async Task<int> getCurrentStockAmount()
+        public async Task<int> GetCurrentStockAmount()
         {
-            Stock stock = await getCurrentStock();
+            Stock stock = await GetCurrentStock();
             if(stock == null)
             {
                 return 0;
@@ -275,9 +275,9 @@ namespace StockApplication.Controllers
         }
 
         //returns current balance for current user
-        public async Task<float> getBalance()
+        public async Task<float> GetBalance()
         {
-            return (await getCurrentUser()).balance;
+            return (await GetCurrentUser()).balance;
         }
 
     }
