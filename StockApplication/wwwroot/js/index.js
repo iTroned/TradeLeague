@@ -5,12 +5,12 @@ $(function () {
 });
 
 function getAllUsers() {
-    $.get("Stock/getAllUsers", function (allUsers) { 
+    $.get("Stock/GetAllUsers", function (allUsers) { 
         formatUsers(allUsers);
     });
 }
 function getAllCompanies() {
-    $.get("Stock/getAllCompanies", function (allCompanies) {
+    $.get("Stock/GetAllCompanies", function (allCompanies) {
         formatCompanies(allCompanies);
     });
 }

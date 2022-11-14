@@ -4,7 +4,7 @@ $(function () {
 });
 
 function getAllCompanies() { //getting list with allCompanies
-    $.get("Stock/getAllCompanies", function (allCompanies) {
+    $.get("Stock/GetAllCompanies", function (allCompanies) {
         formatCompanies(allCompanies);
     });
 }
@@ -25,7 +25,7 @@ function formatCompanies(companies) { //organizing table displaying all companie
 }
     
 function goToCompany(id) { //setting Company-session and being redirected to html displaying info about company
-    $.get("Stock/setCurrentCompany?id=" + id, function (OK) {
+    $.get("Stock/SetCurrentCompany?id=" + id, function (OK) {
         if (OK) {
             window.location.href = "company.html";
         }

@@ -3,7 +3,7 @@ function createUser() {
     const user = {
         username: $("#username").val() //username from input
     }
-    const url = "Stock/createUser"; //create user
+    const url = "Stock/CreateUser"; //create user
     $.post(url, user, function (OK) {
         if (OK) {
             window.location.href = 'index.html'; //redirecting to index after creation complete

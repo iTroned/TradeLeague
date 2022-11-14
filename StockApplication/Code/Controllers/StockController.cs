@@ -23,126 +23,126 @@ namespace StockApplication.Controllers
             this.listenerService = listenerService;
         }
         //returns a user by its id
-        public async Task<User> getUserByID(string id)
+        public async Task<User> GetUserByID(string id)
         {
-            return await _db.getUserByID(Guid.Parse(id));
+            return await _db.GetUserByID(Guid.Parse(id));
         }
 
         //returns a user by a given username
-        public async Task<User> getUserByUsername(string username)
+        public async Task<User> GetUserByUsername(string username)
         {
-            return await _db.getUserByUsername(username);
+            return await _db.GetUserByUsername(username);
         }
         //returning users with their ids is dangerous but doesnt matter when not using a login system
         //returns all registered users
-        public async Task<List<User>> getAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            return await _db.getAllUsers();
+            return await _db.GetAllUsers();
         }
 
         //update a user, does not work for admin
-        public async Task<bool> updateUser(User editUser)
+        public async Task<bool> UpdateUser(User editUser)
         {
-            if(editUser.id == (await getUserByUsername(adminName)).id)
+            if(editUser.id == (await GetUserByUsername(adminName)).id)
             {
                 return false;
             }
-            return await _db.updateUser(editUser);
+            return await _db.UpdateUser(editUser);
         }
 
         //creates a new user with a given name
-        public async Task<bool> createUser(string username)
+        public async Task<bool> CreateUser(string username)
         {
-            bool created = await _db.createUser(username);
+            bool created = await _db.CreateUser(username);
             if (created)
             {
-                User user = await _db.getUserByUsername(username);
-                setCurrentUser(user.id.ToString());
+                User user = await _db.GetUserByUsername(username);
+                SetCurrentUser(user.id.ToString());
             }
             return created;
         }
 
         //checks if username is taken | WIP when creating user and changing name | client side only
-        public async Task<bool> checkUsername(string username)
+        public async Task<bool> CheckUsername(string username)
         {
-            return await _db.checkUsername(username);
+            return await _db.CheckUsername(username);
         }
 
         //creates a new company
-        public async Task<bool> createCompany(string name)
+        public async Task<bool> CreateCompany(string name)
         {
-            return await _db.createCompany(name);
+            return await _db.CreateCompany(name);
         }
 
         //gets a single company by its id
-        public async Task<Company> getCompanyByID(string id)
+        public async Task<Company> GetCompanyByID(string id)
         {
-            return await _db.getCompanyByID(Guid.Parse(id));
+            return await _db.GetCompanyByID(Guid.Parse(id));
         }
 
         //returns a list of all companies registeres
-        public async Task<List<Company>> getAllCompanies()
+        public async Task<List<Company>> GetAllCompanies()
         {
-            return await _db.getAllCompanies();
+            return await _db.GetAllCompanies();
         }
 
         //deletets the user in the session. cannot delete admin
-        public async Task<bool> deleteUser()
+        public async Task<bool> DeleteUser()
         {
-            if((await getCurrentUser()).username != adminName){
-                bool deleted = await _db.deleteUser(await getCurrentUserID());
+            if((await GetCurrentUser()).username != adminName){
+                bool deleted = await _db.DeleteUser(await GetCurrentUserID());
                 if (deleted)
                 {
-                    removeCurrentUser();
+                    RemoveCurrentUser();
                 }
                 return deleted;
             }
             return false;
         }
         
-        public async Task<bool> deleteCompany(string id) //not yet implemented
+        public async Task<bool> DeleteCompany(string id) //not yet implemented
         {
             return false;
-            //return await _db.deleteCompany(id);
+            //return await _db.DeleteCompany(id);
         }
 
         private const string SessionKeyCompany = "_currentCompany";
         //sets a new company in session
-        public async Task<bool> setCurrentCompany(string id)
+        public async Task<bool> SetCurrentCompany(string id)
         {
             HttpContext.Session.SetString(SessionKeyCompany, id);
-            //return await getCurrentCompany() != null;
+            //return await GetCurrentCompany() != null;
             return true;
         }
 
         //gets the company id saved in session
-        public string getCurrentCompanyID()
+        public string GetCurrentCompanyID()
         {
             return HttpContext.Session.GetString(SessionKeyCompany);
         }
 
         //gets company linked to id in session
-        public async Task<Company> getCurrentCompany()
+        public async Task<Company> GetCurrentCompany()
         {
-            return await _db.getCompanyByID(Guid.Parse(getCurrentCompanyID()));
+            return await _db.GetCompanyByID(Guid.Parse(GetCurrentCompanyID()));
         }
 
         //clears 
-        public void removeCurrentCompany()
+        public void RemoveCurrentCompany()
         {
             HttpContext.Session.SetString(SessionKeyCompany, "");
         }
         private const string SessionKeyUser = "_currentUser";
         
         //sets a new user to the session
-        public bool setCurrentUser(string id)
+        public bool SetCurrentUser(string id)
         {
             HttpContext.Session.SetString(SessionKeyUser, id);
             return true;
         }
 
         //returns current user id, after setting  a standard in some cases
-        public async Task<string> getCurrentUserID()
+        public async Task<string> GetCurrentUserID()
 
         {
             string cur = HttpContext.Session.GetString(SessionKeyUser);
@@ -153,24 +153,61 @@ namespace StockApplication.Controllers
             //If current user is not set, set it as admin
             else
             {
-                User admin = await _db.getUserByUsername(adminName);
-                setCurrentUser(admin.id.ToString());
+                User admin = await _db.GetUserByUsername(adminName);
+                SetCurrentUser(admin.id.ToString());
                 return admin.id.ToString();
             }
         }
 
         //returns current user
-        public async Task<User> getCurrentUser()
+        public async Task<User> GetCurrentUser()
         {
-            return await _db.getUserByID(Guid.Parse(await getCurrentUserID()));
+            return await _db.GetUserByID(Guid.Parse(await GetCurrentUserID()));
         }
 
         //removes current user
-        public void removeCurrentUser()
+        public void RemoveCurrentUser()
         {
             HttpContext.Session.SetString(SessionKeyUser, "");
         }
+        private const string SessionKeyLoggedIn = "_loggedIn";
 
+        //sets a new user to the session
+        private void setLoggedInStatus(bool status)
+        {
+            int val;
+            if (status)
+            {
+                val = 1;
+            }
+            else
+            {
+                val = 0;
+            }
+            HttpContext.Session.SetInt32(SessionKeyLoggedIn, val);
+        }
+
+        public bool getLoggedInStatus()
+        {
+            try
+            {
+                int val = (int)HttpContext.Session.GetInt32(SessionKeyLoggedIn);
+                if(val == 1)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool logIn(string username, string password)
+        {
+
+        }
         //custom session | not used
         public void setCustomSession(string sessionName, string value)
         {

@@ -26,7 +26,7 @@ namespace StockApplication.Code
             this.Companyid = Companyid;
             this.companyName = companyName;
         }
-        public Stock clone()
+        public Stock Clone()
         {
             return new Stock(id, amount, Userid, Companyid, companyName);
         }

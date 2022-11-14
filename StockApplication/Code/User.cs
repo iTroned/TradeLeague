@@ -9,21 +9,25 @@ namespace StockApplication.Code
     {
         public Guid id { get; set; }
         public string username { get; set; }
+        public string password { get; set; }
+        public string salt { get; set; }
         public float balance { get; set; }
         public virtual ICollection<Stock> stocks { get; private set; }
-        public User() : this(Guid.Empty, null, 0)
+        public User() : this(Guid.Empty, null, null, null, 0)
         {
 
         }
-        public User(Guid id, string username, float balance)
+        public User(Guid id, string username, string password, string salt, float balance)
         {
             this.id = id;
             this.username = username;
+            this.password = password;
+            this.salt = salt;
             this.balance = balance;
         }
-        public User clone()
+        public User Clone()
         {
-            return new User(id, username, balance);
+            return new User(id, username, password, salt, balance);
         }
     }
 }

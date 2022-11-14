@@ -4,7 +4,7 @@ $(function () {
 });
 
 function getAllUsers() {
-    $.get("Stock/getUsersValue", function (allUsers) { //getting list of AllUsers with TotalValues
+    $.get("Stock/GetUsersValue", function (allUsers) { //getting list of AllUsers with TotalValues
         formatUsers(allUsers);
     });
 }

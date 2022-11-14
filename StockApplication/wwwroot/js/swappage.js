@@ -4,12 +4,12 @@ $(function () {
 });
 
 function getAllUsers() {
-    $.get("Stock/getAllUsers", function (allUsers) { //get all users
+    $.get("Stock/GetAllUsers", function (allUsers) { //get all users
         formatUsers(allUsers);
     });
 }
 function getCurrentUser() {
-    $.get("Stock/getCurrentUserID", function (id) { //get user ID from current session
+    $.get("Stock/GetCurrentUserID", function (id) { //get user ID from current session
         uid = id;
         getAllUsers();
     });
@@ -37,7 +37,7 @@ function formatUsers(users) { //display all users
     $("#users").html(out);
 }
 function swapUser(id) { //if SWAP-button is clicked, swap current session to new User and run functions to reload the table
-    $.get("Stock/setCurrentUser?id=" + id, function (OK) {
+    $.get("Stock/SetCurrentUser?id=" + id, function (OK) {
         uid = id;
         getAllUsers();
     });

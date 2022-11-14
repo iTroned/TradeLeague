@@ -4,7 +4,7 @@
 });
 
 function getCompany() {
-    $.get("Stock/getCurrentCompany", function (company) { //getting current session company
+    $.get("Stock/GetCurrentCompany", function (company) { //getting current session company
         $("#name").html(company.name);
         company.values = JSON.parse(company.values); //parsing json to get values as an array
 
@@ -59,16 +59,16 @@ function formatCompany(company) { //format display of values
 
 
 function getStock() {
-    $.get("Stock/getCurrentStockAmount", function (amount) { //returns amount of shares owned for current user at current company
+    $.get("Stock/GetCurrentStockAmount", function (amount) { //returns amount of shares owned for current user at current company
         $("#current").html("Current stocks: " + amount);
     });
-    $.get("Stock/getBalance", function (bal) { //returns balance for current user
+    $.get("Stock/GetBalance", function (bal) { //returns balance for current user
         $("#balance").html("Current balance: " + bal + "$");
     });
 }
 function buyStock() { //buy stock function onclick
     const amount = $("#amount").val(); 
-    $.get("Stock/buyStock?amount=" + amount, function (OK) { //current user tries to buy X amount of shares from current company
+    $.get("Stock/BuyStock?amount=" + amount, function (OK) { //current user tries to buy X amount of shares from current company
         if (OK) {
             $("#message").html("Successfully bought " + amount + " stocks!");
             getStock(); //if buy is successful, current amount of shares owned is updated
@@ -80,7 +80,7 @@ function buyStock() { //buy stock function onclick
 }
 function sellStock() { //sell stock function onclick
     const amount = $("#amount").val(); 
-    $.get("Stock/sellStock?amount=" + amount, function (OK) { //current user tries to sell X amount of shares from current company
+    $.get("Stock/SellStock?amount=" + amount, function (OK) { //current user tries to sell X amount of shares from current company
         if (OK) {
             $("#message").html("Successfully sold " + amount + " stocks!");
             getStock(); //if sell is successful, current amount of shares owned is updated
@@ -93,7 +93,7 @@ function sellStock() { //sell stock function onclick
 
 function updateData() {
     $.ajax({ //ajax call to request updates from dal
-        url: 'Stock/getCurrentCompany', //get current session company
+        url: 'Stock/GetCurrentCompany', //get current session company
         type: 'get',
         success: function (data) { //call on functions to update site dynamically
             data.values = JSON.parse(data.values);
