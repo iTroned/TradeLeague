@@ -9,6 +9,7 @@ namespace StockApplication.Code.DAL
         Task<User> GetUserByID(Guid id);
         Task<User> GetUserByUsername(string username);
         Task<List<User>> GetAllUsers();
+        Task<List<ClientUser>> GetAllClientUsers();
         Task<bool> UpdateUser(User editUser);
         Task<bool> CreateUser(string username, string password);
         Task<bool> LogIn(string username, string password);

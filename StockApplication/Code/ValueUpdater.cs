@@ -24,7 +24,7 @@ namespace StockApplication.Code
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     IStockRepository rep = scope.ServiceProvider.GetRequiredService<IStockRepository>();
-                    await rep.updateValues();
+                    await rep.UpdateValues();
                 }
                 //await Task.Delay(60000, stoppingToken);
                 await Task.Delay(60000, stoppingToken);

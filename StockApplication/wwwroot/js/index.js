@@ -1,7 +1,15 @@
 ﻿//inspired by lectures
 $(function () {
-    getAllUsers(); 
-    getAllCompanies();
+    $.get("Stock/GetLoggedInStatus", function (OK) {
+        if (OK) {
+            getAllUsers();
+            getAllCompanies();
+        }
+        else {
+            window.location.href = 'login.html';
+        }
+    });
+    
 });
 
 function getAllUsers() {

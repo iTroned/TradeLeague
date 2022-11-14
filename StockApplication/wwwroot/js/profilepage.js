@@ -8,9 +8,6 @@ function getCurrentUser() {
         formatBalance(user);
         formatStock(user);
         totalValue(user);
-        if (user.username === "admin") {
-            $("#buttons").html("");
-        }
     });
 }
 
@@ -53,7 +50,7 @@ function formatStock(user) { //formatting table with owned stocks
 function deleteUser() { //deleteUser function
     let text = "Are you sure you want to delete this user?"
     if (confirm(text) == true) { //confirm box to make sure user dosen't delete on accident
-        $.get("Stock/deleteUser", function (OK) {
+        $.get("Stock/DeleteUser", function (OK) {
             if (OK) {
                 window.location.href = "index.html";
             }
@@ -67,5 +64,10 @@ function deleteUser() { //deleteUser function
 }
 function editUser() {
     window.location.href = "edit.html";
+}
+function logOut() {
+    $.get("Stock/LogOut", function (OK) {
+        window.location.href = "index.html";
+    });
 }
 

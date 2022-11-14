@@ -19,14 +19,14 @@ namespace StockApplication.Code.DAL
 
                 Random random = new Random();
                 //creating 3 standard users
-                var admin = new User(Guid.NewGuid(), "admin", 100);
+                /*var admin = new User(Guid.NewGuid(), "admin", 100);
                 var luddeBassen = new User(Guid.NewGuid(), "Luddebassen", 100);
                 var itroned = new User(Guid.NewGuid(), "iTroned", 100);
 
                 //add users to databaseset for users (StockContext)
                 context.UserSet.Add(admin);
                 context.UserSet.Add(luddeBassen);
-                context.UserSet.Add(itroned);
+                context.UserSet.Add(itroned);*/
 
                 //creating standard companies
                 string[] names = { "Random Inc.", "Organic Chemistry Inc.", "Starbux Inc.", "Techhex Inc.", "Tweeter", "JSon", "MeatA", "Betatech", "Mathworkz", "Metaverse", "Harrison Trumpets", "Out of Ideas Inc.", "Wowverse", "Nightfall", "Warhorse" };

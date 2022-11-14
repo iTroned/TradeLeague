@@ -14,7 +14,6 @@ namespace StockApplication.Controllers
     [Route("[controller]/[action]")]
     public class StockController : ControllerBase
     {
-        private const string adminName = "admin";
         private readonly IStockRepository _db;
         private readonly IHostedService listenerService;
         public StockController(IStockRepository db, IHostedService listenerService)
@@ -33,17 +32,16 @@ namespace StockApplication.Controllers
         {
             return await _db.GetUserByUsername(username);
         }
-        //returning users with their ids is dangerous but doesnt matter when not using a login system
-        //returns all registered users
-        public async Task<List<User>> GetAllUsers()
+        //returns all registered users with their usernames and passwords
+        public async Task<List<ClientUser>> GetAllUsers()
         {
-            return await _db.GetAllUsers();
+            return await _db.GetAllClientUsers();
         }
 
         //update a user, does not work for admin
         public async Task<bool> UpdateUser(User editUser)
         {
-            if(editUser.id == (await GetUserByUsername(adminName)).id)
+            if (!GetLoggedInStatus())
             {
                 return false;
             }
@@ -58,6 +56,7 @@ namespace StockApplication.Controllers
             {
                 User user = await _db.GetUserByUsername(username);
                 SetCurrentUser(user.id.ToString());
+                SetLoggedInStatus(true);
             }
             return created;
         }
@@ -71,6 +70,10 @@ namespace StockApplication.Controllers
         //creates a new company
         public async Task<bool> CreateCompany(string name)
         {
+            if (!GetLoggedInStatus())
+            {
+                return false;
+            }
             return await _db.CreateCompany(name);
         }
 
@@ -89,15 +92,16 @@ namespace StockApplication.Controllers
         //deletets the user in the session. cannot delete admin
         public async Task<bool> DeleteUser()
         {
-            if((await GetCurrentUser()).username != adminName){
-                bool deleted = await _db.DeleteUser(await GetCurrentUserID());
-                if (deleted)
-                {
-                    RemoveCurrentUser();
-                }
-                return deleted;
+            if (!GetLoggedInStatus())
+            {
+                return false;
             }
-            return false;
+            bool deleted = await _db.DeleteUser(GetCurrentUserID());
+            if (deleted)
+            {
+                RemoveCurrentUser();
+            }
+            return deleted;
         }
         
         public async Task<bool> DeleteCompany(string id) //not yet implemented
@@ -108,11 +112,9 @@ namespace StockApplication.Controllers
 
         private const string SessionKeyCompany = "_currentCompany";
         //sets a new company in session
-        public async Task<bool> SetCurrentCompany(string id)
+        public void SetCurrentCompany(string id)
         {
             HttpContext.Session.SetString(SessionKeyCompany, id);
-            //return await GetCurrentCompany() != null;
-            return true;
         }
 
         //gets the company id saved in session
@@ -135,34 +137,40 @@ namespace StockApplication.Controllers
         private const string SessionKeyUser = "_currentUser";
         
         //sets a new user to the session
-        public bool SetCurrentUser(string id)
+        private bool SetCurrentUser(string id)
         {
             HttpContext.Session.SetString(SessionKeyUser, id);
             return true;
         }
 
         //returns current user id, after setting  a standard in some cases
-        public async Task<string> GetCurrentUserID()
-
+        public string GetCurrentUserID()
         {
+            if (!GetLoggedInStatus())
+            {
+                return null;
+            }
             string cur = HttpContext.Session.GetString(SessionKeyUser);
             if (cur != null && cur != "")
             {
                 return cur;
             }
-            //If current user is not set, set it as admin
-            else
-            {
-                User admin = await _db.GetUserByUsername(adminName);
-                SetCurrentUser(admin.id.ToString());
-                return admin.id.ToString();
-            }
+            return null;
         }
 
         //returns current user
         public async Task<User> GetCurrentUser()
         {
-            return await _db.GetUserByID(Guid.Parse(await GetCurrentUserID()));
+            if (!GetLoggedInStatus())
+            {
+                return null;
+            }
+            string userID = GetCurrentUserID();
+            if(userID == null)
+            {
+                return null;
+            }
+            return await _db.GetUserByID(Guid.Parse(GetCurrentUserID()));
         }
 
         //removes current user
@@ -173,7 +181,7 @@ namespace StockApplication.Controllers
         private const string SessionKeyLoggedIn = "_loggedIn";
 
         //sets a new user to the session
-        private void setLoggedInStatus(bool status)
+        private void SetLoggedInStatus(bool status)
         {
             int val;
             if (status)
@@ -187,7 +195,7 @@ namespace StockApplication.Controllers
             HttpContext.Session.SetInt32(SessionKeyLoggedIn, val);
         }
 
-        public bool getLoggedInStatus()
+        public bool GetLoggedInStatus()
         {
             try
             {
@@ -206,7 +214,20 @@ namespace StockApplication.Controllers
 
         public async Task<bool> LogIn(string username, string password)
         {
-            return await _db.LogIn(username, password);
+            bool check =  await _db.LogIn(username, password);
+            if (!check)
+            {
+                return false;
+            }
+            User user = await _db.GetUserByUsername(username);
+            SetCurrentUser(user.id.ToString());
+            SetLoggedInStatus(true);
+            return true;
+        }
+        public void LogOut()
+        {
+            RemoveCurrentUser();
+            SetLoggedInStatus(false);
         }
         //custom session | not used
         public void SetCustomSession(string sessionName, string value)
@@ -221,7 +242,7 @@ namespace StockApplication.Controllers
         //returns list of stocks certain user own
         public async Task<List<StockName>> GetStocksForUser(string id)
         {
-            List<Stock> dbList = await _db.GetStocksWithUserID(await GetCurrentUserID());
+            List<Stock> dbList = await _db.GetStocksWithUserID(GetCurrentUserID());
             List<StockName> stockList = new List<StockName>();
             foreach(Stock stock in dbList)
             {
@@ -237,7 +258,7 @@ namespace StockApplication.Controllers
         }
 
         //get StockName object with specific user's value
-        public async Task<StockName> getUsersValueByID(String id)
+        public async Task<StockName> GetUsersValueByID(string id)
         {
             return await _db.GetUsersValueByID(id);
         }
@@ -248,19 +269,19 @@ namespace StockApplication.Controllers
         //tries to buy stock for user and company in session
         public async Task<bool> BuyStock(int amount)
         {
-            return await _db.TryToBuyStockForUser(await GetCurrentUserID(), GetCurrentCompanyID(), amount);
+            return await _db.TryToBuyStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
         }
 
         //tries to sell stock for user and company in session
         public async Task<bool> SellStock(int amount)
         {
-            return await _db.TryToSellStockForUser(await GetCurrentUserID(), GetCurrentCompanyID(), amount);
+            return await _db.TryToSellStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
         }
 
         //gets the current stock from user and company in session
         public async Task<Stock> GetCurrentStock()
         {
-            return await _db.GetStockWithUserAndCompany(await GetCurrentUserID(), GetCurrentCompanyID());
+            return await _db.GetStockWithUserAndCompany(GetCurrentUserID(), GetCurrentCompanyID());
         }
 
         //returns amount of shares owned for current user at current company

@@ -9,6 +9,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace StockApplication.Code.DAL
 {
@@ -16,13 +17,17 @@ namespace StockApplication.Code.DAL
     //code inspired by lectures and Entity framework documentation: https://learn.microsoft.com/en-us/ef/
     {
         private readonly StockContext _db; //stock context created in Code/DAL/StockContext.cs
+        private readonly ILogger _logger;
         private float startBalance = 1000.0F;
         private float startValue = 10.0F;
+        private int saltSize = 20;
         private Random random;
         private string startValues;
-        public StockRepository(StockContext db)
+
+        public StockRepository(StockContext db, ILogger<StockRepository> logger)
         {
             _db = db;
+            _logger = logger;
             random = new Random();
         }
 
@@ -54,8 +59,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //saving if everything is ok -> transaction: multiple operations on database, only saving if every operation is successful
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false; //something went wrong
             }
         }
@@ -87,8 +93,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //saving if everything is ok -> transaction: multiple operations on database, only saving if every operation is successful
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false; //something went wrong
             }
         }
@@ -109,16 +116,34 @@ namespace StockApplication.Code.DAL
             }
             return null;
         }
-
-        //get list with all users
         public async Task<List<User>> GetAllUsers()
         {
             try
             {
                 return await _db.UserSet.Select(u => u.Clone()).ToListAsync(); //clone all Users saved in UserSet, and converting it to a List
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
+                return null;
+            }
+        }
+        //get list with all users
+        public async Task<List<ClientUser>> GetAllClientUsers()
+        {
+            try
+            {
+                List<User> users = await _db.UserSet.Select(u => u.Clone()).ToListAsync(); //clone all Users saved in UserSet, and converting it to a List
+                List<ClientUser> clientUsers = new List<ClientUser>();
+                foreach(User user in users)
+                {
+                    clientUsers.Add(new ClientUser(user.username, user.balance));
+                }
+                return clientUsers;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
                 return null; //something went wrong
             }
         }
@@ -148,8 +173,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //saving if all operations successful
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false; //something went wrong
             }
         }
@@ -159,18 +185,26 @@ namespace StockApplication.Code.DAL
         {
             try
             {
+                //System.Diagnostics.Debug.WriteLine(username + " | " + password);
+                if(password == null || password.Equals(""))
+                {
+                    return false;
+                }
                 if (!(await CheckUsername(username)) || username == null || username.Equals("")) //If username does already exists, is null or equals "", return false
                 {
                     return false;
                 }
                 Guid id = Guid.NewGuid(); //generate a new Guid for user, (primary key)
-                User user = new User(id, username, startBalance); //new user entity with id generated, username from input and startBalance configured at line 19
+                string salt = CreateSalt(saltSize);
+                string hash = HashPassword(password, salt);
+                User user = new User(id, username, hash, salt, startBalance); //new user entity with id generated, username from input and startBalance configured at line 19
                 _db.UserSet.Add(user); //add user to databaseset
                 await _db.SaveChangesAsync(); //saving
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false; //something went wrong
             }
         }
@@ -184,8 +218,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //save changes
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false; //something went wrong
             }
         }
@@ -244,8 +279,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //save changes
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
         }
@@ -272,8 +308,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //saving
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
         }
@@ -287,8 +324,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //save changes
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
         }
@@ -300,8 +338,9 @@ namespace StockApplication.Code.DAL
             {
                 return await _db.CompanySet.Select(u => u.Clone()).ToListAsync(); //clone all entities in databaseset, convert them to list and return it
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return null;
             }
         }
@@ -332,8 +371,9 @@ namespace StockApplication.Code.DAL
             {
                 return await _db.StockSet.Select(u => u.Clone()).ToListAsync(); //cloned all entities in databaseset and convert to list
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return null;
             }
         }
@@ -351,8 +391,9 @@ namespace StockApplication.Code.DAL
                 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
         }
@@ -376,8 +417,9 @@ namespace StockApplication.Code.DAL
                 }
                 return false; //user does not have enough balance
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
             
@@ -407,8 +449,9 @@ namespace StockApplication.Code.DAL
                 }
                 return await CreateStock(user, company, amount); //if no stock-entity with this user and this company exists, createStock function
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
         }
@@ -424,8 +467,9 @@ namespace StockApplication.Code.DAL
                 await _db.SaveChangesAsync(); //save changes
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
         }
@@ -451,8 +495,9 @@ namespace StockApplication.Code.DAL
                 //not saved because of transactions : function is called in tryToSellStock and saved if all operations is okay
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return false;
             }
 
@@ -465,8 +510,9 @@ namespace StockApplication.Code.DAL
             {
                 return await _db.StockSet.Where(p => p.Userid == id).ToListAsync(); //return list of stocks belonging to this user
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return null;
             }
             
@@ -491,8 +537,9 @@ namespace StockApplication.Code.DAL
             {
                 return await _db.StockSet.Where(p => p.Companyid == company.id).ToListAsync(); //list of stocks connected to this company-entity
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return null;
             }
             
@@ -510,8 +557,9 @@ namespace StockApplication.Code.DAL
                 }
                 return arr[0]; //returning stock if exists
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 return null;
             }
         }
@@ -590,21 +638,20 @@ namespace StockApplication.Code.DAL
         {
             byte[] passwordArr = Encoding.UTF8.GetBytes(password);
             byte[] saltArr = Convert.FromBase64String(salt);
-
             byte[] passwordSalt = new byte[passwordArr.Length + saltArr.Length];
 
             for (int i = 0; i < passwordArr.Length; i++)
             {
                 passwordSalt[i] = passwordArr[i];
             }
-            for (int i = 0; i < salt.Length; i++)
+            for (int i = 0; i < saltArr.Length; i++)
             {
                 passwordSalt[passwordArr.Length + i] = saltArr[i];
             }
             byte[] hash = new SHA256Managed().ComputeHash(passwordSalt);
             return Convert.ToBase64String(hash);
         }
-        private string GetSalt(int size)
+        private string CreateSalt(int size)
         {
             //Generate a cryptographic random number.
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
@@ -617,7 +664,17 @@ namespace StockApplication.Code.DAL
 
         public async Task<bool> LogIn(string username, string password)
         {
-            throw new NotImplementedException();
+            User user = await GetUserByUsername(username);
+            if(user == null)
+            {
+                return false;
+            }
+            string hashed = HashPassword(password, user.salt);
+            if (hashed.Equals(user.password))
+            {
+                return true;
+            }
+            return false;
         }
 
   
