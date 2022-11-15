@@ -66,14 +66,14 @@ function getStock() {
         $("#current").html("Current stocks: " + stock.amount);
     })
     .fail(function () {
-        $("#current").html("Feil under innhenting av aksje")
+        $("#error").html("Feil oppstod")
     });
 
     $.get("Stock/GetCurrentUser", function (user) { //returns balance for current user
         $("#balance").html("Current balance: " + user.balance + "$");
     })
     .fail(function () {
-        $("#message").html("Feil under innhenting av bruker")
+        $("#error").html("Feil under innhenting av bruker")
     });
 }
 function buyStock() { //buy stock function onclick

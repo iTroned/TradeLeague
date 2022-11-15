@@ -25,10 +25,8 @@ function formatCompanies(companies) { //organizing table displaying all companie
 }
     
 function goToCompany(id) { //setting Company-session and being redirected to html displaying info about company
-    $.get("Stock/SetCurrentCompany?id=" + id, function (OK) {
-        if (OK) {
-            window.location.href = "company.html";
-        }
+    $.get("Stock/SetCurrentCompany?id=" + id, function () {
+        window.location.href = "company.html";
     });
 }
 
