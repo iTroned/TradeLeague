@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace StockApplication.Controllers
 {
@@ -16,9 +17,11 @@ namespace StockApplication.Controllers
     {
         private readonly IStockRepository _db;
         private readonly IHostedService listenerService;
-        public StockController(IStockRepository db, IHostedService listenerService)
+        private readonly ILogger _logger;
+        public StockController(IStockRepository db, IHostedService listenerService, ILogger<StockController> logger)
         {
             _db = db;
+            _logger = logger;
             this.listenerService = listenerService;
         }
         //returns a user by its id
@@ -39,26 +42,27 @@ namespace StockApplication.Controllers
         }
 
         //update a user, does not work for admin
-        public async Task<bool> UpdateUser(User editUser)
+        public async Task<ServerResponse> UpdateUser(User editUser)
         {
             if (!GetLoggedInStatus())
             {
-                return false;
+                return new ServerResponse(false, "Not logged in!");
             }
             return await _db.UpdateUser(editUser);
         }
 
         //creates a new user with a given name
-        public async Task<bool> CreateUser(string username, string password)
+        public async Task<ServerResponse> CreateUser(string username, string password)
         {
-            bool created = await _db.CreateUser(username, password);
+            ServerResponse response = await _db.CreateUser(username, password);
+            bool created = response.Status;
             if (created)
             {
                 User user = await _db.GetUserByUsername(username);
                 SetCurrentUser(user.id.ToString());
                 SetLoggedInStatus(true);
             }
-            return created;
+            return response;
         }
 
         //checks if username is taken | WIP when creating user and changing name | client side only
@@ -68,11 +72,11 @@ namespace StockApplication.Controllers
         }
 
         //creates a new company
-        public async Task<bool> CreateCompany(string name)
+        public async Task<ServerResponse> CreateCompany(string name)
         {
             if (!GetLoggedInStatus())
             {
-                return false;
+                return new ServerResponse(false, "Not logged in!");
             }
             return await _db.CreateCompany(name);
         }
@@ -90,18 +94,18 @@ namespace StockApplication.Controllers
         }
 
         //deletets the user in the session. cannot delete admin
-        public async Task<bool> DeleteUser()
+        public async Task<ServerResponse> DeleteUser()
         {
             if (!GetLoggedInStatus())
             {
-                return false;
+                return new ServerResponse(false, "Not logged in!");
             }
-            bool deleted = await _db.DeleteUser(GetCurrentUserID());
-            if (deleted)
+            ServerResponse response = await _db.DeleteUser(GetCurrentUserID());
+            if (response.Status)
             {
                 RemoveCurrentUser();
             }
-            return deleted;
+            return response;
         }
         
         public async Task<bool> DeleteCompany(string id) //not yet implemented
@@ -212,17 +216,16 @@ namespace StockApplication.Controllers
             }
         }
 
-        public async Task<bool> LogIn(string username, string password)
+        public async Task<ServerResponse> LogIn(string username, string password)
         {
-            bool check =  await _db.LogIn(username, password);
-            if (!check)
+            ServerResponse response = await _db.LogIn(username, password);
+            if (response.Status)
             {
-                return false;
+                User user = await _db.GetUserByUsername(username);
+                SetCurrentUser(user.id.ToString());
+                SetLoggedInStatus(true);
             }
-            User user = await _db.GetUserByUsername(username);
-            SetCurrentUser(user.id.ToString());
-            SetLoggedInStatus(true);
-            return true;
+            return response;
         }
         public void LogOut()
         {
@@ -267,13 +270,13 @@ namespace StockApplication.Controllers
         
 
         //tries to buy stock for user and company in session
-        public async Task<bool> BuyStock(int amount)
+        public async Task<ServerResponse> BuyStock(int amount)
         {
             return await _db.TryToBuyStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
         }
 
         //tries to sell stock for user and company in session
-        public async Task<bool> SellStock(int amount)
+        public async Task<ServerResponse> SellStock(int amount)
         {
             return await _db.TryToSellStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
         }

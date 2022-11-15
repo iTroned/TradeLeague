@@ -68,25 +68,25 @@ function getStock() {
 }
 function buyStock() { //buy stock function onclick
     const amount = $("#amount").val(); 
-    $.get("Stock/BuyStock?amount=" + amount, function (OK) { //current user tries to buy X amount of shares from current company
-        if (OK) {
+    $.get("Stock/BuyStock?amount=" + amount, function (response) { //current user tries to buy X amount of shares from current company
+        if (response.Status) {
             $("#message").html("Successfully bought " + amount + " stocks!");
             getStock(); //if buy is successful, current amount of shares owned is updated
         }
         else {
-            $("#message").html("Something went wrong while buying!");
+            $("#message").html(response.Response);
         }
     });
 }
 function sellStock() { //sell stock function onclick
     const amount = $("#amount").val(); 
-    $.get("Stock/SellStock?amount=" + amount, function (OK) { //current user tries to sell X amount of shares from current company
-        if (OK) {
+    $.get("Stock/SellStock?amount=" + amount, function (response) { //current user tries to sell X amount of shares from current company
+        if (response.Status) {
             $("#message").html("Successfully sold " + amount + " stocks!");
             getStock(); //if sell is successful, current amount of shares owned is updated
         }
         else {
-            $("#message").html("Something went wrong while selling!");
+            $("#message").html(response.Response);
         }
     });
 }

@@ -32,13 +32,13 @@ namespace StockApplication.Code.DAL
         }
 
         //Buy stock
-        public async Task<bool> TryToBuyStockForUser(string userID, string companyID, int amount) 
+        public async Task<ServerResponse> TryToBuyStockForUser(string userID, string companyID, int amount) 
         {
             try
             {
                 if(amount <= 0) //if user try to buy 0 or less, return false
                 {
-                    return false;
+                    return new ServerResponse(false, "Amount less than 0!");
                 }
                 User user = await GetUserByID(Guid.Parse(userID)); //using userID to get User-entity with getUserByID, GUID.Parse converts from string to GUID
                 Company company = await GetCompanyByID(Guid.Parse(companyID)); //using companyID to get Company-entity with getCompanyByID
@@ -46,34 +46,34 @@ namespace StockApplication.Code.DAL
                 float totalPrice = company.value * amount; //totalprice = value of share * amount of shares user wants
                 if(!(user.balance > totalPrice)) //user dont have enough money
                 {
-                    return false;
+                    return new ServerResponse(false, "Cannot afford!");
                 }
                 if(!(await RemoveBalanceFromUser(user, totalPrice))) //if removeBalance function fails return false
                 {
-                    return false;
+                    return new ServerResponse(false, "Database error!");
                 }
                 if(!(await AddStockToUser(user, company, amount))) //if no stock was added to user return false
                 {
-                    return false;
+                    return new ServerResponse(false, "Database error!");
                 }
                 await _db.SaveChangesAsync(); //saving if everything is ok -> transaction: multiple operations on database, only saving if every operation is successful
-                return true;
+                return new ServerResponse(true);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return false; //something went wrong
+                return new ServerResponse(false, "Server Exception");
             }
         }
 
         //try to sell stock
-        public async Task<bool> TryToSellStockForUser(string userID, string companyID, int amount) 
+        public async Task<ServerResponse> TryToSellStockForUser(string userID, string companyID, int amount) 
         {
             try
             {
                 if (amount <= 0) //if user try to sell 0 or less, return false
                 {
-                    return false;
+                    return new ServerResponse(false, "Cannot sell less than 0!");
                 }
                 User user = await GetUserByID(Guid.Parse(userID)); //using userID to get User-entity with getUserByID
                 Company company = await GetCompanyByID(Guid.Parse(companyID)); //using companyID to get Company-entity with getCompanyByID
@@ -83,20 +83,20 @@ namespace StockApplication.Code.DAL
 
                 if(stock == null || stock.amount < amount) //if stock does not exist, or user try to sell more than user own
                 {
-                    return false;
+                    return new ServerResponse(false, "User does not have enough stocks to sell!");
                 }
                 if(!(await RemoveStockFromUser(stock, amount))) //if something went wrong while removing the stock
                 {
-                    return false;
+                    return new ServerResponse(false, "Database error!");
                 }
                 AddBalanceToUser(user, totalPrice); //give money to user
                 await _db.SaveChangesAsync(); //saving if everything is ok -> transaction: multiple operations on database, only saving if every operation is successful
-                return true;
+                return new ServerResponse(true);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return false; //something went wrong
+                return new ServerResponse(false, "Server Exception!");
             }
         }
 
@@ -149,7 +149,7 @@ namespace StockApplication.Code.DAL
         }
 
         //update user with new values
-        public async Task<bool> UpdateUser(User editUser) //parameter is User-entity with updated values
+        public async Task<ServerResponse> UpdateUser(User editUser) //parameter is User-entity with updated values
         {
             try
             {
@@ -158,10 +158,11 @@ namespace StockApplication.Code.DAL
                 {
                     if (!(await CheckUsername(editUser.username))) //if new username is taken, return false
                     {
-                        return false;
+                        return new ServerResponse(false, "Username taken!");
                     }
                     else
                     {
+                        _logger.LogInformation("User " + user.username + " changed his username to " + editUser.username);
                         user.username = editUser.username; //updating username
                     }
                 }
@@ -169,30 +170,30 @@ namespace StockApplication.Code.DAL
                 {
                     user.username = editUser.username; //if Username for both entities are equal, it stays the same
                 }
-                user.balance = editUser.balance; //updating balance with new values
+                //user.balance = editUser.balance; //updating balance with new values
                 await _db.SaveChangesAsync(); //saving if all operations successful
-                return true;
+                return new ServerResponse(true);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return false; //something went wrong
+                return new ServerResponse(false, "Server Exception!");
             }
         }
 
         //create a new user with username
-        public async Task<bool> CreateUser(string username, string password)
+        public async Task<ServerResponse> CreateUser(string username, string password)
         {
             try
             {
                 //System.Diagnostics.Debug.WriteLine(username + " | " + password);
                 if(password == null || password.Equals(""))
                 {
-                    return false;
+                    return new ServerResponse(false, "Password cannot be blank!");
                 }
                 if (!(await CheckUsername(username)) || username == null || username.Equals("")) //If username does already exists, is null or equals "", return false
                 {
-                    return false;
+                    return new ServerResponse(false, "Username taken!");
                 }
                 Guid id = Guid.NewGuid(); //generate a new Guid for user, (primary key)
                 string salt = CreateSalt(saltSize);
@@ -200,28 +201,31 @@ namespace StockApplication.Code.DAL
                 User user = new User(id, username, hash, salt, startBalance); //new user entity with id generated, username from input and startBalance configured at line 19
                 _db.UserSet.Add(user); //add user to databaseset
                 await _db.SaveChangesAsync(); //saving
-                return true;
+                _logger.LogInformation("User " + username + " was created!");
+                return new ServerResponse(true);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return false; //something went wrong
+                return new ServerResponse(false, "Server Exception!");
             }
         }
 
         //delete user with id
-        public async Task<bool> DeleteUser(string id)
+        public async Task<ServerResponse> DeleteUser(string id)
         {
             try
             {
-                _db.UserSet.Remove(await GetUserByID(Guid.Parse(id))); //function getUserByID gives us the user entity that will be removed
+                User user = await GetUserByID(Guid.Parse(id));
+                _db.UserSet.Remove(user); //function getUserByID gives us the user entity that will be removed
                 await _db.SaveChangesAsync(); //save changes
-                return true;
+                _logger.LogInformation("User " + user.username + " was deleted!");
+                return new ServerResponse(true);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return false; //something went wrong
+                return new ServerResponse(false, "Server Exception!");
             }
         }
 
@@ -262,7 +266,7 @@ namespace StockApplication.Code.DAL
         }*/
 
         //create company with name from input
-        public async Task<bool> CreateCompany(string name)
+        public async Task<ServerResponse> CreateCompany(string name)
         {
             try
             {
@@ -277,12 +281,12 @@ namespace StockApplication.Code.DAL
                 company.values = JsonConvert.SerializeObject(startArray); //serialize as JSON, cant save array in database
                 _db.CompanySet.Add(company); //add to databaseset
                 await _db.SaveChangesAsync(); //save changes
-                return true;
+                return new ServerResponse(true);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return false;
+                return new ServerResponse(false, "Server Exception!");
             }
         }
 
@@ -316,18 +320,18 @@ namespace StockApplication.Code.DAL
         }
 
         //deleting company (not used) yet
-        public async Task<bool> DeleteCompany(string id)
+        public async Task<ServerResponse> DeleteCompany(string id)
         {
             try
             {
                 _db.CompanySet.Remove(await GetCompanyByID(Guid.Parse(id))); //get company-entity with given primary key and remove it
                 await _db.SaveChangesAsync(); //save changes
-                return true;
+                return new ServerResponse(true);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return false;
+                return new ServerResponse(false, "Server Exception!");
             }
         }
 
@@ -353,7 +357,7 @@ namespace StockApplication.Code.DAL
         }
 
         //set balance for user
-        public void SetBalanceForUser(User user, float balance) //update user-balance, but no saving -> used by other functions, only save if all operations done is completed (transactions)
+        private void SetBalanceForUser(User user, float balance) //update user-balance, but no saving -> used by other functions, only save if all operations done is completed (transactions)
         {
             user.balance = balance;
         }
@@ -379,7 +383,7 @@ namespace StockApplication.Code.DAL
         }
 
         //delete stock
-        public async Task<bool> DeleteStock(Stock stock, bool save) //bool save is for transactions. If True we get the confirmation that we can save, if false abort.
+        private async Task<bool> DeleteStock(Stock stock, bool save) //bool save is for transactions. If True we get the confirmation that we can save, if false abort.
         {
             try
             {
@@ -399,7 +403,7 @@ namespace StockApplication.Code.DAL
         }
 
         //add balance to user
-        public void AddBalanceToUser(User user, float value) //increase user-balance with float value (not saving because of transactions)
+        private void AddBalanceToUser(User user, float value) //increase user-balance with float value (not saving because of transactions)
         {
             user.balance += value;
         }
@@ -589,6 +593,7 @@ namespace StockApplication.Code.DAL
          
                 await UpdateValueOnCompany(company.id, company.value * multiplier); //update value with new value
             }
+            _logger.LogInformation("Updated values!");
            
         }
 
@@ -662,19 +667,20 @@ namespace StockApplication.Code.DAL
             return Convert.ToBase64String(buff);
         }
 
-        public async Task<bool> LogIn(string username, string password)
+        public async Task<ServerResponse> LogIn(string username, string password)
         {
             User user = await GetUserByUsername(username);
             if(user == null)
             {
-                return false;
+                return new ServerResponse(false, "User does not exist!");
             }
             string hashed = HashPassword(password, user.salt);
             if (hashed.Equals(user.password))
             {
-                return true;
+                _logger.LogInformation("User " + username + " has logged in!");
+                return new ServerResponse(true);
             }
-            return false;
+            return new ServerResponse(false, "Wrong password!");
         }
 
   

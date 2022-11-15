@@ -15,12 +15,12 @@ function editUser() {
         username: $("#username").val(), //new username
         balance: $("#balance").val(), //new balance
     };
-    $.post("Stock/UpdateUser", user, function (OK) { //tries to update, if ok redirect to html, else error message
-        if (OK) {
+    $.post("Stock/UpdateUser", user, function (response) { //tries to update, if ok redirect to html, else error message
+        if (response.Status) {
             window.location.href = 'profilepage.html';
         }
         else {
-            $("#feil").html("Something went wrong");
+            $("#feil").html(response.Response);
         }
     });
 }

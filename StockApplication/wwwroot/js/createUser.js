@@ -5,12 +5,13 @@ function createUser() {
         password: $("#password").val() //password from unput
     }
     const url = "Stock/CreateUser"; //create user
-    $.post(url, user, function (OK) {
-        if (OK) {
-            window.location.href = 'index.html'; //redirecting to index after creation complete
+    $.post(url, user, function (response) {
+        if (response.Status) {
+            $("#error").html(response.Status);
+            //window.location.href = 'index.html'; //redirecting to index after creation complete
         }
         else {
-            $("#error").html("Something went wrong");
+            $("#error").html("fuc");
         }
     });
 };
