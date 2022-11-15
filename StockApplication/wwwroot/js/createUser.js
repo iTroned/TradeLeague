@@ -5,13 +5,10 @@ function createUser() {
         password: $("#password").val() //password from unput
     }
     const url = "Stock/CreateUser"; //create user
-    $.post(url, user, function (response) {
-        if (response.Status) {
-            $("#error").html(response.Status);
-            //window.location.href = 'index.html'; //redirecting to index after creation complete
-        }
-        else {
-            $("#error").html("fuc");
-        }
+    $.post(url, user, function () {
+        window.location.href = 'index.html'; //redirecting to index after creation complete
+    })
+    .fail(function () {
+        $("#error").html("Feil brukernavn og passord");
     });
 };

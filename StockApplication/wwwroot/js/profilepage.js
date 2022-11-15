@@ -8,7 +8,8 @@ function getCurrentUser() {
         formatBalance(user);
         formatStock(user);
         totalValue(user);
-    });
+    })
+    
 }
 
 function formatUser(user) { //formatting welcome message
@@ -26,6 +27,9 @@ function formatBalance(user) { //display user.balance in balance-div.
 function totalValue(user) { //getting TotalValue for user, displaying in totalValue-div
     $.get("Stock/GetUsersValueByID?id=" + user.id, function (data) {
         $("#totalValue").html(data.value + "$");
+    })
+    .fail(function () {
+        $("#totalValue").html("Feil på server ved henting av verdi ");
     });
 }
 
@@ -50,13 +54,11 @@ function formatStock(user) { //formatting table with owned stocks
 function deleteUser() { //deleteUser function
     let text = "Are you sure you want to delete this user?"
     if (confirm(text) == true) { //confirm box to make sure user dosen't delete on accident
-        $.get("Stock/DeleteUser", function (response) {
-            if (response.Response) {
-                window.location.href = "index.html";
-            }
-            else {
-                window.location.href = "profilepage.html"
-            }
+        $.get("Stock/DeleteUser", function (user) {
+            window.location.href = "index.html";
+        })
+        .fail(function () {
+            $("#error").html("Feil på server under sletting av bruker ");
         });
 
     }

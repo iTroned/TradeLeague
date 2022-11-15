@@ -3,10 +3,13 @@ $(function () {
 
 
     $.get("Stock/GetCurrentUser", function (user) { //get current User-objekt
-            $("#id").val(user.id); // need id in schema, to confirm the correct user-object is being edited
-            $("#username").val(user.username);
-            $("#balance").val(user.balance);
-        });
+        $("#id").val(user.id); // need id in schema, to confirm the correct user-object is being edited
+        $("#username").val(user.username);
+        $("#balance").val(user.balance);
+    })
+    .fail(function () {
+        $("#error").html("Something went wrong on server.")
+    });
 });
 
 function editUser() {
@@ -16,12 +19,10 @@ function editUser() {
         balance: $("#balance").val(), //new balance
     };
     $.post("Stock/UpdateUser", user, function (response) { //tries to update, if ok redirect to html, else error message
-        if (response.Status) {
-            window.location.href = 'profilepage.html';
-        }
-        else {
-            $("#feil").html(response.Response);
-        }
+        window.location.href = 'profilepage.html';
+    })
+    .fail(function () {
+        $("#error").html("Something went wrong on server.")
     });
 }
 

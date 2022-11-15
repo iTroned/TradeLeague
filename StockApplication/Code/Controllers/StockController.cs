@@ -17,95 +17,152 @@ namespace StockApplication.Controllers
     {
         private readonly IStockRepository _db;
         private readonly IHostedService listenerService;
-        private readonly ILogger _logger;
-        public StockController(IStockRepository db, IHostedService listenerService, ILogger<StockController> logger)
+        private readonly ILogger _log;
+        
+        public StockController(IStockRepository db, IHostedService listenerService, ILogger<StockController> log)
         {
             _db = db;
-            _logger = logger;
+            _log = log;
+            
             this.listenerService = listenerService;
         }
         //returns a user by its id
-        public async Task<User> GetUserByID(string id)
+        public async Task<ActionResult> GetUserByID(string id)
         {
-            return await _db.GetUserByID(Guid.Parse(id));
+            User user = await _db.GetUserByID(Guid.Parse(id));
+            if(user == null)
+            {
+                _log.LogInformation("Did not find user");
+                return NotFound("Did not find the user");
+            }
+            return Ok(user);
         }
 
         //returns a user by a given username
-        public async Task<User> GetUserByUsername(string username)
+        public async Task<ActionResult> GetUserByUsername(string username)
         {
-            return await _db.GetUserByUsername(username);
+            User user = await _db.GetUserByUsername(username);
+            if(user == null)
+            {
+                _log.LogInformation("Did not find user");
+                return NotFound("Did not find the user");
+            }
+           
+            return Ok(user);
         }
+
         //returns all registered users with their usernames and passwords
-        public async Task<List<ClientUser>> GetAllUsers()
+        public async Task<ActionResult> GetAllUsers()
         {
-            return await _db.GetAllClientUsers();
+            List<ClientUser> allUsers = await _db.GetAllClientUsers();
+            return Ok(allUsers);
         }
 
         //update a user, does not work for admin
-        public async Task<ServerResponse> UpdateUser(User editUser)
+        public async Task<ActionResult> UpdateUser(User editUser)
         {
             if (!GetLoggedInStatus())
             {
-                return new ServerResponse(false, "Not logged in!");
+                _log.LogInformation("User not logged in");
+                return Unauthorized("User not logged in");
             }
-            return await _db.UpdateUser(editUser);
+
+            ServerResponse response = await _db.UpdateUser(editUser);
+            bool updated = response.Status;
+
+            if (!updated)
+            {
+                _log.LogInformation(response.Response);
+                return BadRequest(response.Response);
+            }
+            return Ok("User updated");
         }
 
         //creates a new user with a given name
-        public async Task<ServerResponse> CreateUser(string username, string password)
+        public async Task<ActionResult> CreateUser(string username, string password)
         {
             ServerResponse response = await _db.CreateUser(username, password);
             bool created = response.Status;
-            if (created)
+            if (!created)
             {
-                User user = await _db.GetUserByUsername(username);
-                SetCurrentUser(user.id.ToString());
-                SetLoggedInStatus(true);
+                _log.LogInformation(response.Response);
+                return BadRequest(response.Response);
             }
-            return response;
+            User user = await _db.GetUserByUsername(username);
+            SetCurrentUser(user.id.ToString());
+            SetLoggedInStatus(true);
+
+            return Ok("User created");
         }
 
         //checks if username is taken | WIP when creating user and changing name | client side only
-        public async Task<bool> CheckUsername(string username)
+        public async Task<ActionResult> CheckUsername(string username)
         {
-            return await _db.CheckUsername(username);
+            bool checkName = await _db.CheckUsername(username);
+
+            if (!checkName)
+            {
+                _log.LogInformation("Username was taken or invalid");
+                return BadRequest("Username was taken or invalid");
+            }
+            return Ok("Username is valid");
         }
 
         //creates a new company
-        public async Task<ServerResponse> CreateCompany(string name)
+        public async Task<ActionResult> CreateCompany(string name)
         {
             if (!GetLoggedInStatus())
             {
-                return new ServerResponse(false, "Not logged in!");
+                return Unauthorized("User not logged in");
             }
-            return await _db.CreateCompany(name);
+
+            ServerResponse response = await _db.CreateCompany(name);
+            bool created = response.Status;
+
+            if (!created)
+            {
+                _log.LogInformation(response.Response);
+                return BadRequest(response.Response);
+            }
+            return Ok("Company created");
         }
 
         //gets a single company by its id
-        public async Task<Company> GetCompanyByID(string id)
+        public async Task<ActionResult> GetCompanyByID(string id)
         {
-            return await _db.GetCompanyByID(Guid.Parse(id));
+            Company company = await _db.GetCompanyByID(Guid.Parse(id));
+            if(company == null)
+            {
+                _log.LogInformation("Did not find company");
+                return NotFound("Did not find the company");
+            }
+            return Ok(company);
         }
 
         //returns a list of all companies registeres
-        public async Task<List<Company>> GetAllCompanies()
+        public async Task<ActionResult> GetAllCompanies()
         {
-            return await _db.GetAllCompanies();
+            List<Company> companyList = await _db.GetAllCompanies();
+            return Ok(companyList);
         }
 
         //deletets the user in the session. cannot delete admin
-        public async Task<ServerResponse> DeleteUser()
+        public async Task<ActionResult> DeleteUser()
         {
             if (!GetLoggedInStatus())
             {
-                return new ServerResponse(false, "Not logged in!");
+                _log.LogInformation("User not logged in");
+                return Unauthorized("User not logged in");
             }
+
             ServerResponse response = await _db.DeleteUser(GetCurrentUserID());
-            if (response.Status)
+            if (!response.Status)
             {
-                RemoveCurrentUser();
+                _log.LogInformation(response.Response);
+                return BadRequest(response.Response); //Check
             }
-            return response;
+            RemoveCurrentUser();
+            return Ok("User deleted");
         }
         
         public async Task<bool> DeleteCompany(string id) //not yet implemented
@@ -128,9 +185,15 @@ namespace StockApplication.Controllers
         }
 
         //gets company linked to id in session
-        public async Task<Company> GetCurrentCompany()
+        public async Task<ActionResult> GetCurrentCompany()
         {
-            return await _db.GetCompanyByID(Guid.Parse(GetCurrentCompanyID()));
+            Company company = await _db.GetCompanyByID(Guid.Parse(GetCurrentCompanyID()));
+            if(company == null)
+            {
+                _log.LogInformation("Company not found");
+                return NotFound("Company not found");
+            }
+            return Ok(company);
         }
 
         //clears 
@@ -163,18 +226,26 @@ namespace StockApplication.Controllers
         }
 
         //returns current user
-        public async Task<User> GetCurrentUser()
+        public async Task<ActionResult> GetCurrentUser()
         {
             if (!GetLoggedInStatus())
             {
-                return null;
+                _log.LogInformation("User not logged in");
+                return Unauthorized("User not logged in");
             }
             string userID = GetCurrentUserID();
             if(userID == null)
             {
-                return null;
+                _log.LogInformation("UserID not found in session");
+                return NotFound("UserID not found in session");
             }
-            return await _db.GetUserByID(Guid.Parse(GetCurrentUserID()));
+            User user = await _db.GetUserByID(Guid.Parse(GetCurrentUserID()));
+            if(user == null)
+            {
+                _log.LogInformation("User not found");
+                return NotFound("User not found");
+            }
+            return Ok(user);
         }
 
         //removes current user
@@ -216,16 +287,19 @@ namespace StockApplication.Controllers
             }
         }
 
-        public async Task<ServerResponse> LogIn(string username, string password)
+        public async Task<ActionResult> LogIn(string username, string password)
         {
             ServerResponse response = await _db.LogIn(username, password);
-            if (response.Status)
+            if (!response.Status)
             {
-                User user = await _db.GetUserByUsername(username);
-                SetCurrentUser(user.id.ToString());
-                SetLoggedInStatus(true);
+                _log.LogInformation(response.Response);
+                return BadRequest(response.Response);
             }
-            return response;
+            User user = await _db.GetUserByUsername(username);
+            SetCurrentUser(user.id.ToString());
+            SetLoggedInStatus(true);
+
+            return Ok("Logged in");
         }
         public void LogOut()
         {
@@ -243,7 +317,7 @@ namespace StockApplication.Controllers
         }
 
         //returns list of stocks certain user own
-        public async Task<List<StockName>> GetStocksForUser(string id)
+        public async Task<ActionResult> GetStocksForUser(string id)
         {
             List<Stock> dbList = await _db.GetStocksWithUserID(GetCurrentUserID());
             List<StockName> stockList = new List<StockName>();
@@ -251,58 +325,71 @@ namespace StockApplication.Controllers
             {
                 stockList.Add(new StockName(stock.companyName, stock.amount, await _db.GetStockValue(stock)));
             }
-            return stockList;
+            return Ok(stockList);
         }
 
         //returns list with total value for every user
-        public async Task<List<StockName>> GetUsersValue() 
+        public async Task<ActionResult> GetUsersValue() 
         {
-            return await _db.GetAllUsersTotalValue();
+            List<StockName> stocks = await _db.GetAllUsersTotalValue();
+            return Ok(stocks);
         }
 
         //get StockName object with specific user's value
-        public async Task<StockName> GetUsersValueByID(string id)
+        public async Task<ActionResult> GetUsersValueByID(string id)
         {
-            return await _db.GetUsersValueByID(id);
+            StockName stockName = await _db.GetUsersValueByID(id);
+            if (stockName.name == null)
+            {
+                _log.LogInformation("User not found");
+                return NotFound("User not found");
+            }
+            return Ok(stockName);
         }
 
        
         
 
         //tries to buy stock for user and company in session
-        public async Task<ServerResponse> BuyStock(int amount)
+        public async Task<ActionResult> BuyStock(int amount)
         {
-            return await _db.TryToBuyStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
+            ServerResponse response = await _db.TryToBuyStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
+            if(!response.Status == true)
+            {
+                _log.LogInformation(response.Response);
+                return BadRequest(response.Response);
+            }
+            return Ok("Stock sucessfully bought");
         }
 
         //tries to sell stock for user and company in session
-        public async Task<ServerResponse> SellStock(int amount)
+        public async Task<ActionResult> SellStock(int amount)
         {
-            return await _db.TryToSellStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
+            ServerResponse response = await _db.TryToSellStockForUser(GetCurrentUserID(), GetCurrentCompanyID(), amount);
+            if (!response.Status == true)
+            {
+                _log.LogInformation(response.Response);
+                return BadRequest(response.Response);
+            }
+            return Ok("Stock sucessfully sold");
+            
         }
 
         //gets the current stock from user and company in session
-        public async Task<Stock> GetCurrentStock()
+        public async Task<ActionResult> GetCurrentStock()
         {
-            return await _db.GetStockWithUserAndCompany(GetCurrentUserID(), GetCurrentCompanyID());
-        }
-
-        //returns amount of shares owned for current user at current company
-        public async Task<int> GetCurrentStockAmount()
-        {
-            Stock stock = await GetCurrentStock();
+            Stock stock = await _db.GetStockWithUserAndCompany(GetCurrentUserID(), GetCurrentCompanyID());
             if(stock == null)
             {
-                return 0;
+                _log.LogInformation("Stock not found");
+                return BadRequest("Stock not found");
             }
-            return stock.amount;
+            return Ok(stock);
         }
 
-        //returns current balance for current user
-        public async Task<float> GetBalance()
-        {
-            return (await GetCurrentUser()).balance;
-        }
+
+
+
 
     }
 }

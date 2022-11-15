@@ -10,6 +10,9 @@ function getCompany() {
 
         chart(company); //calling functions to display chart and values
         formatCompany(company);
+    })
+    .fail(function () {
+        $("#name").html("Feil under henting av company");
     });
 }
 
@@ -59,35 +62,38 @@ function formatCompany(company) { //format display of values
 
 
 function getStock() {
-    $.get("Stock/GetCurrentStockAmount", function (amount) { //returns amount of shares owned for current user at current company
-        $("#current").html("Current stocks: " + amount);
+    $.get("Stock/GetCurrentStock", function (stock) { //returns amount of shares owned for current user at current company
+        $("#current").html("Current stocks: " + stock.amount);
+    })
+    .fail(function () {
+        $("#current").html("Feil under innhenting av aksje")
     });
-    $.get("Stock/GetBalance", function (bal) { //returns balance for current user
-        $("#balance").html("Current balance: " + bal + "$");
+
+    $.get("Stock/GetCurrentUser", function (user) { //returns balance for current user
+        $("#balance").html("Current balance: " + user.balance + "$");
+    })
+    .fail(function () {
+        $("#message").html("Feil under innhenting av bruker")
     });
 }
 function buyStock() { //buy stock function onclick
     const amount = $("#amount").val(); 
-    $.get("Stock/BuyStock?amount=" + amount, function (response) { //current user tries to buy X amount of shares from current company
-        if (response.Status) {
-            $("#message").html("Successfully bought " + amount + " stocks!");
-            getStock(); //if buy is successful, current amount of shares owned is updated
-        }
-        else {
-            $("#message").html(response.Response);
-        }
+    $.get("Stock/BuyStock?amount=" + amount, function () { //current user tries to buy X amount of shares from current company
+        $("#message").html("Successfully bought " + amount + " stocks!");
+        getStock(); //if buy is successful, current amount of shares owned is updated
+    })
+    .fail(function () {
+        $("#message").html("Feil under kjøp av aksje");
     });
 }
 function sellStock() { //sell stock function onclick
     const amount = $("#amount").val(); 
-    $.get("Stock/SellStock?amount=" + amount, function (response) { //current user tries to sell X amount of shares from current company
-        if (response.Status) {
-            $("#message").html("Successfully sold " + amount + " stocks!");
-            getStock(); //if sell is successful, current amount of shares owned is updated
-        }
-        else {
-            $("#message").html(response.Response);
-        }
+    $.get("Stock/SellStock?amount=" + amount, function () { //current user tries to sell X amount of shares from current company
+        $("#message").html("Successfully sold " + amount + " stocks!");
+        getStock(); //if sell is successful, current amount of shares owned is updated  
+    })
+    .fail(function () {
+        $("#message").html("Feil under innhenting av bruker");
     });
 }
 
@@ -102,10 +108,10 @@ function updateData() {
                 dataset.data = data.values;
             });
             companyChart.update(); //updating chart
-            
-
+        },
+        error: function (data) {
+            $("#message").html(data);
         }
-
     });
 }
 

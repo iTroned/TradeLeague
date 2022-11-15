@@ -59,17 +59,22 @@
         <div class="container">
             <!--Header retrieved from javascript function getCompany()-->
             <h1 id="name"></h1>
+            <h1 id="errorName"></h1>
             <div class="container">
                 <!--Balance retrieved from javascript function getstock()-->
                 <div id="balance"></div>
+                <div id="errorBalance"></div>
                 <!--Current owned stocks retrieved from javascript function getstock()-->
                 <div id="current"></div>
+                <div id="errorCurrent"></div>
                 <!--Input form for choosing amount of stocks either to sell or buy, max 100 min 1-->
                 <input type="number" id="amount" min="1" max="100" value="1" />
                 <!--Buy and sell button both sending values to script-->
                 <button class="btn btn-success" id="buy" onclick="buyStock()">Buy</button>
                 <button class="btn btn-danger" id="sell" onclick="sellStock()">Sell</button>
                 <div id="message"></div>
+                <div id="errorMessage"></div>
+
 
             </div>
 
@@ -84,6 +89,7 @@
                 <div class="container">
                     <!--Information retrieved from javascipt function formatCompany(company)-->
                     <div id="information"></div>
+                    <div id="errorInformation"></div>
                 </div>
             </div>
         </div>

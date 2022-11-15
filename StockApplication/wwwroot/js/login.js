@@ -5,12 +5,10 @@ function createUser() {
         password: $("#password").val() //password from unput
     }
     const url = "Stock/LogIn"; //create user
-    $.post(url, user, function (response) {
-        if (response.Status) {
-            window.location.href = 'index.html'; //redirecting to index after creation complete
-        }
-        else {
-            $("#error").html(response.Response);
-        }
+    $.post(url, user, function () {
+        window.location.href = 'index.html'; //redirecting to index after creation complete
+    })
+    .fail(function () {
+        $("#error").html("Feil under innlogging");
     });
 };
