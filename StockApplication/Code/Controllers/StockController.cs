@@ -19,12 +19,10 @@ namespace StockApplication.Controllers
         private readonly IHostedService listenerService;
         private readonly ILogger _log;
         
-        public StockController(IStockRepository db, IHostedService listenerService, ILogger<StockController> log)
+        public StockController(IStockRepository db, ILogger<StockController> log)
         {
             _db = db;
             _log = log;
-            
-            this.listenerService = listenerService;
         }
         //returns a user by its id
         public async Task<ActionResult> GetUserByID(string id)
@@ -61,7 +59,7 @@ namespace StockApplication.Controllers
         //update a user, does not work for admin
         public async Task<ActionResult> UpdateUser(User editUser)
         {
-            if (!GetLoggedInStatus())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_loggedIn)))
             {
                 _log.LogInformation("User not logged in");
                 return Unauthorized("User not logged in");
@@ -253,29 +251,29 @@ namespace StockApplication.Controllers
         {
             HttpContext.Session.SetString(SessionKeyUser, "");
         }
-        private const string SessionKeyLoggedIn = "_loggedIn";
+        private const string _loggedIn = "loggedIn";
+        private const string _notLoggedIn = "";
+
 
         //sets a new user to the session
         private void SetLoggedInStatus(bool status)
         {
-            int val;
             if (status)
             {
-                val = 1;
+                HttpContext.Session.SetString(_loggedIn, _loggedIn);
             }
             else
             {
-                val = 0;
+                HttpContext.Session.SetString(_loggedIn, _notLoggedIn);
             }
-            HttpContext.Session.SetInt32(SessionKeyLoggedIn, val);
         }
 
         public bool GetLoggedInStatus()
         {
             try
             {
-                int val = (int)HttpContext.Session.GetInt32(SessionKeyLoggedIn);
-                if(val == 1)
+                string val = HttpContext.Session.GetString(_loggedIn);
+                if(val == _loggedIn)
                 {
                     return true;
                 }
