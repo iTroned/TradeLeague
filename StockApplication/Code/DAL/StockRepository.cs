@@ -105,6 +105,10 @@ namespace StockApplication.Code.DAL
         {
             return await _db.UserSet.FindAsync(id); //returns entity with given primary key
         }
+        public async Task<User> GetUserByID(string id)
+        {
+            return await GetUserByID(Guid.Parse(id));
+        }
 
         //get user-entity by using username (all usernames are unique)
         public async Task<User> GetUserByUsername(string username)
@@ -149,26 +153,26 @@ namespace StockApplication.Code.DAL
         }
 
         //update user with new values
-        public async Task<ServerResponse> UpdateUser(User editUser) //parameter is User-entity with updated values
+        public async Task<ServerResponse> UpdateUser(string id, string newUsername) //parameter is User-entity with updated values
         {
             try
             {
-                User user = await _db.UserSet.FindAsync(editUser.id); //getting a User entity with previous values (ID always stays the same)
-                if (user.username != editUser.username) //if username is updated
+                User user = await GetUserByID(id); //getting a User entity with previous values (ID always stays the same)
+                if (user.username != newUsername) //if username is updated
                 {
-                    if (!(await CheckUsername(editUser.username))) //if new username is taken, return false
+                    if (!(await CheckUsername(newUsername))) //if new username is taken, return false
                     {
                         return new ServerResponse(false, "Username taken!");
                     }
                     else
                     {
-                        _logger.LogInformation("User " + user.username + " changed his username to " + editUser.username);
-                        user.username = editUser.username; //updating username
+                        _logger.LogInformation("User " + user.username + " changed his username to " + newUsername);
+                        user.username = newUsername; //updating username
                     }
                 }
                 else
                 {
-                    user.username = editUser.username; //if Username for both entities are equal, it stays the same
+                    return new ServerResponse(false, "Username is the same!");
                 }
                 //user.balance = editUser.balance; //updating balance with new values
                 await _db.SaveChangesAsync(); //saving if all operations successful
@@ -598,21 +602,21 @@ namespace StockApplication.Code.DAL
         }
 
         //get list of all users with their total value
-        public async Task<List<StockName>> GetAllUsersTotalValue()
+        public async Task<List<ClientStock>> GetAllUsersTotalValue()
         {
             
             List<User> userList = await GetAllUsers(); //get list of all users
-            List<StockName> stockList = new List<StockName>(); 
+            List<ClientStock> stockList = new List<ClientStock>(); 
             foreach (User user in userList) //for each user, go through all owned stocks and add to the value
             {
                 stockList.Add(await GetUsersValueByID(user.id.ToString())); //returning user name with total amount of shares owned and total value
             }
-            stockList.Sort(new StockNameComparer());
+            stockList.Sort(new ClientStockComparer());
              return stockList;
         }
 
         //get total value for this specific user
-        public async Task<StockName> GetUsersValueByID(String id)
+        public async Task<ClientStock> GetUsersValueByID(String id)
         {
             float totalValue = 0; //total value 
             int amount = 0; //amount of shares
@@ -623,9 +627,9 @@ namespace StockApplication.Code.DAL
                 amount += stock.amount;
                 totalValue += (await GetStockValue(stock));
             }
-            List<StockName> stockList = new List<StockName>();
+            List<ClientStock> stockList = new List<ClientStock>();
             totalValue += user.balance; //adding user's balance at the end and returning totalvalue
-            StockName stockName = new StockName(user.username, amount, totalValue);
+            ClientStock stockName = new ClientStock(user.username, amount, totalValue);
             return stockName;
         }
 

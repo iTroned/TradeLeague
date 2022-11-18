@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace StockApplication.Code
 {
-    public class StockNameComparer : IComparer<StockName>
+    public class ClientStockComparer : IComparer<ClientStock>
     {
-        public int Compare([AllowNull] StockName x, [AllowNull] StockName y)
+        public int Compare([AllowNull] ClientStock x, [AllowNull] ClientStock y)
         {
             if (object.ReferenceEquals(x, y))
             {

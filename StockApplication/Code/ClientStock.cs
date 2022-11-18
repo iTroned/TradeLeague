@@ -7,21 +7,25 @@ using System.Threading.Tasks;
 namespace StockApplication.Code
 {
     
-    public class StockName
+    public class ClientStock
     {
         [RegularExpression(@"[a-zA-ZæøåÆØÅ. \-]{2,20}")]
         public string name { get; set; }
         public int amount { get; set; }
         public float value { get; set; }
-        public StockName() : this(null, 0, 0)
+        public ClientStock() : this(null, 0, 0)
         {
 
         }
-        public StockName(string name, int amount, float value)
+        public ClientStock(string name, int amount, float value)
         {
             this.name = name;
             this.amount = amount;
             this.value = value;
+        }
+        public ClientStock(string name, int amount) : this(name, amount, 0)
+        {
+
         }
 
     }
