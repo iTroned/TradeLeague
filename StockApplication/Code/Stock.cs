@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StockApplication.Code
@@ -10,6 +11,7 @@ namespace StockApplication.Code
         
         public Guid Userid { get; set; }
         public Guid Companyid { get; set; }
+        [RegularExpression(@"[a-zA-ZÊ¯Â∆ÿ≈. \-]{2,20}")]
         public string companyName { get; set; }
 
         public virtual User User { get; set; }

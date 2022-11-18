@@ -64,16 +64,20 @@ namespace StockApplication.Controllers
                 _log.LogInformation("User not logged in");
                 return Unauthorized("User not logged in");
             }
-
-            ServerResponse response = await _db.UpdateUser(editUser);
-            bool updated = response.Status;
-
-            if (!updated)
+            if (ModelState.IsValid)
             {
-                _log.LogInformation(response.Response);
-                return BadRequest(response.Response);
+                ServerResponse response = await _db.UpdateUser(editUser);
+                bool updated = response.Status;
+
+                if (!updated)
+                {
+                    _log.LogInformation(response.Response);
+                    return BadRequest(response.Response);
+                }
+                return Ok("User updated");
             }
-            return Ok("User updated");
+            _log.LogInformation("Error in inputvalidation on server");
+            return BadRequest("Error in inputvalidation on server");
         }
 
         //creates a new user with a given name
