@@ -612,7 +612,7 @@ namespace StockApplication.Code.DAL
                 stockList.Add(await GetUsersValueByID(user.id.ToString())); //returning user name with total amount of shares owned and total value
             }
             stockList.Sort(new ClientStockComparer());
-             return stockList;
+            return stockList;
         }
 
         //get total value for this specific user
