@@ -144,15 +144,15 @@ namespace StockApplication.Controllers
         }
 
         //gets a single company by its id
-        public async Task<ActionResult> GetCompanyByID(string id)
+        public async Task<ActionResult> GetCompanyByName(string name)
         {
-            Company company = await _db.GetCompanyByID(Guid.Parse(id));
+            ClientCompany company = await _db.GetCompanyByName(name);
             if(company == null)
             {
                 _log.LogInformation(RESPONSE_companyNotFound);
                 return NotFound(RESPONSE_companyNotFound);
             }
-            return Ok(new ClientCompany(company.name, company.value, company.values));
+            return Ok(company);
         }
 
         //returns a list of all companies registeres
@@ -299,13 +299,8 @@ namespace StockApplication.Controllers
                 _log.LogInformation(RESPONSE_userNotLoggedIn);
                 return Unauthorized(RESPONSE_userNotLoggedIn);
             }
-            List<Stock> dbList = await _db.GetStocksWithUserID(userid);
-            List<ClientStock> stockList = new List<ClientStock>();
-            foreach(Stock stock in dbList)
-            {
-                stockList.Add(new ClientStock(stock.companyName, stock.amount, await _db.GetStockValue(stock)));
-            }
-            return Ok(stockList);
+         
+            return Ok(await _db.GetStocksWithUserID(userid));
         }
 
         //returns list with total value for every user

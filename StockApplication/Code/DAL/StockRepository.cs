@@ -32,7 +32,7 @@ namespace StockApplication.Code.DAL
         }
 
         //Buy stock
-        public async Task<ServerResponse> TryToBuyStockForUser(string userID, string companyID, int amount) 
+        public async Task<ServerResponse> TryToBuyStockForUser(string userID, string comName, int amount) 
         {
             try
             {
@@ -41,7 +41,7 @@ namespace StockApplication.Code.DAL
                     return new ServerResponse(false, "Amount less than 0!");
                 }
                 User user = await GetUserByID(Guid.Parse(userID)); //using userID to get User-entity with getUserByID, GUID.Parse converts from string to GUID
-                Company company = await GetCompanyByID(Guid.Parse(companyID)); //using companyID to get Company-entity with getCompanyByID
+                Company company = await GetCompanyByName(comName); //using companyID to get Company-entity with getCompanyByID
                 
                 float totalPrice = company.value * amount; //totalprice = value of share * amount of shares user wants
                 if(!(user.balance > totalPrice)) //user dont have enough money
@@ -67,7 +67,7 @@ namespace StockApplication.Code.DAL
         }
 
         //try to sell stock
-        public async Task<ServerResponse> TryToSellStockForUser(string userID, string companyID, int amount) 
+        public async Task<ServerResponse> TryToSellStockForUser(string userID, string comName, int amount) 
         {
             try
             {
@@ -76,7 +76,7 @@ namespace StockApplication.Code.DAL
                     return new ServerResponse(false, "Cannot sell less than 0!");
                 }
                 User user = await GetUserByID(Guid.Parse(userID)); //using userID to get User-entity with getUserByID
-                Company company = await GetCompanyByID(Guid.Parse(companyID)); //using companyID to get Company-entity with getCompanyByID
+                Company company = await GetCompanyByName(comName); //using companyID to get Company-entity with getCompanyByID
 
                 float totalPrice = company.value * amount; ////totalprice = value of share * amount of shares user wants to sell
                 Stock stock = await GetStockWithUserAndCompany(user, company); //get stock entity that is connected with User-entity and Company-entity
@@ -243,12 +243,35 @@ namespace StockApplication.Code.DAL
             }
             return true; //username does not exists
         }
+        public async Task<bool> CheckCompanyName(string comName)
+        {
+            Company[] coms = await _db.CompanySet.Where(p => p.name.ToLower() == comName.ToLower()).ToArrayAsync(); //creating array with all entities with current username
+            if (coms.Length != 0) //if 0 we know username does not exists
+            {
+                return false; //username exists
+            }
+            return true; //username does not exists
+        }
 
         //get company-entity with primary key
-        public async Task<Company> GetCompanyByID(Guid id)
+        private async Task<Company> GetCompanyByID(Guid id)
         {
             Company company = await _db.CompanySet.FindAsync(id); //return company-entity with given primary key values
             return company;
+        }
+        private async Task<Company> GetCompanyByName(string name)
+        {
+            Company[] coms = await _db.CompanySet.Where(p => p.name == name).ToArrayAsync(); //get array of User-entities with given username
+            if (coms.Length == 1) //checking if there only exists 1 entity with current username
+            {
+                return coms[0]; //returns user-entity
+            }
+            return null;
+        }
+        public async Task<ClientCompany> GetClientCompanyByName(string name)
+        {
+            Company company = await GetCompanyByName(name);
+            return new ClientCompany(company.name, company.value, company.values);
         }
 
         //UPDATE COMPANY NOT IMPLEMENTED YET, BUT WILL IN THE FUTURE
@@ -274,6 +297,10 @@ namespace StockApplication.Code.DAL
         {
             try
             {
+                if(!(await CheckCompanyName(name)))
+                {
+                    return new ServerResponse(false, "CompanyName exists!");
+                }
                 Guid id = Guid.NewGuid(); //generate new GUID
                 float[] startArray = new float[10]; //array with history of values
                 Company company = new Company(id, name, startValue, startValues); //new company-entity
@@ -512,11 +539,17 @@ namespace StockApplication.Code.DAL
         }
 
         //get list of stock entities user owns
-        public async Task<List<Stock>> GetStocksWithUserID(Guid id)
+        public async Task<List<ClientStock>> GetStocksWithUserID(Guid id)
         {
             try
             {
-                return await _db.StockSet.Where(p => p.Userid == id).ToListAsync(); //return list of stocks belonging to this user
+                List<Stock> list = await _db.StockSet.Where(p => p.Userid == id).ToListAsync(); //return list of stocks belonging to this user
+                List<ClientStock> newList = new List<ClientStock>();
+                foreach (Stock stock in list)
+                {
+                    newList.Add(new ClientStock(stock.companyName, stock.amount, await GetStockValue(stock)));
+                }
+                return newList;
             }
             catch (Exception e)
             {
@@ -527,13 +560,13 @@ namespace StockApplication.Code.DAL
         }
 
         //input is string, converting to Guid and calling function to get list of stocks this user own
-        public async Task<List<Stock>> GetStocksWithUserID(string id)
+        public async Task<List<ClientStock>> GetStocksWithUserID(string id)
         {
             return await GetStocksWithUserID(Guid.Parse(id));
         }
 
         //input is user-entity, converting to Guid and calling function to get list of stocks this user own
-        public async Task<List<Stock>> GetStocksWithUser(User user)
+        public async Task<List<ClientStock>> GetStocksWithUser(User user)
         {
             return await GetStocksWithUserID(user.id);
         }
@@ -616,16 +649,17 @@ namespace StockApplication.Code.DAL
         }
 
         //get total value for this specific user
-        public async Task<ClientStock> GetUsersValueByID(String id)
+        public async Task<ClientStock> GetUsersValueByID(string id)
         {
             float totalValue = 0; //total value 
             int amount = 0; //amount of shares
             User user = await GetUserByID(Guid.Parse(id));
-            List<Stock> dbList = await GetStocksWithUserID(id);
-            foreach (Stock stock in dbList) //iterating through list and adding value to totalValue
+            List<ClientStock> dbList = await GetStocksWithUserID(id);
+            foreach (ClientStock stock in dbList) //iterating through list and adding value to totalValue
             {
                 amount += stock.amount;
-                totalValue += (await GetStockValue(stock));
+                //totalValue += (await GetStockValue(stock));
+                totalValue += amount * stock.value;
             }
             List<ClientStock> stockList = new List<ClientStock>();
             totalValue += user.balance; //adding user's balance at the end and returning totalvalue

@@ -15,7 +15,7 @@ namespace StockApplication.Code.DAL
         Task<ServerResponse> LogIn(string username, string password);
         Task<bool> CheckUsername(string username);
         Task<ServerResponse> CreateCompany(string name);
-        Task<Company> GetCompanyByID(Guid id);
+        Task<ClientCompany> GetClientCompanyByName(string name);
         Task<List<Company>> GetAllCompanies();
         Task<ServerResponse> DeleteUser(string id);
         Task<ServerResponse> DeleteCompany(string id);
@@ -28,14 +28,14 @@ namespace StockApplication.Code.DAL
         Task<bool> AddStockToUser(User user, Company company, int amount);
         Task<bool> CreateStock(User user, Company company, int amount);
         Task<bool> RemoveStockFromUser(Stock stock, int amount);
-        Task<List<Stock>> GetStocksWithUser(User user);
-        Task<List<Stock>> GetStocksWithUserID(string id);
+        Task<List<ClientStock>> GetStocksWithUser(User user);
+        Task<List<ClientStock>> GetStocksWithUserID(string id);
         Task<List<Stock>> GetStocksWithCompany(Company company);
         Task<Stock> GetStockWithUserAndCompany(User user, Company company);
         Task<Stock> GetStockWithUserAndCompany(string uid, string cid);
         Task<bool> UserHasStocksWithCompany(User user, Company company);
         Task<List<ClientStock>> GetAllUsersTotalValue();
-        Task<ClientStock> GetUsersValueByID(String id);
+        Task<ClientStock> GetUsersValueByID(string id);
         Task<float> GetStockValue(Stock stock);
         Task<List<Stock>> GetAllStocks();
         Task UpdateValues();
