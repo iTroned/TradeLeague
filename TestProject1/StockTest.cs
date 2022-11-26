@@ -354,24 +354,23 @@ namespace TestProject1
         }
 
         [Fact]
-        public async Task GetCompanyByID_Found()
+        public async Task GetCompanyByName_Found()
         {
             //Arrange
             Company company = new Company(Guid.NewGuid(), "Company", 10, "[0,1,2,3,4,5,6,7,8,9]");
-            ClientCompany clientCompany = new ClientCompany(company.name, company.value, company.values);
             
 
-            mockRep.Setup(u => u.GetCompanyByID(company.id)).ReturnsAsync(company);
+            mockRep.Setup(u => u.GetCompanyByName(company.name)).ReturnsAsync(company);
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
 
             //Act
-            var result = (OkObjectResult)await stockController.GetCompanyByID(company.id.ToString());
+            var result = (OkObjectResult)await stockController.GetCompanyByName(company.name);
 
             //Assert
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal(clientCompany.ToString(), result.Value.ToString());
+            Assert.Equal(company.ToString(), result.Value.ToString());
         }
 
         [Fact]
@@ -386,7 +385,7 @@ namespace TestProject1
             var stockController = new StockController(mockRep.Object, mockLog.Object);
 
             //Act 
-            var result = (NotFoundObjectResult)await stockController.GetCompanyByID(id.ToString());
+            var result = (NotFoundObjectResult)await stockController.GetCompanyByName(It.IsAny<string>());
 
             //Assert
             Assert.NotNull(result);

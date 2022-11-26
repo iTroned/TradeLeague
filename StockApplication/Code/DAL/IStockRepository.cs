@@ -16,6 +16,8 @@ namespace StockApplication.Code.DAL
         Task<bool> CheckUsername(string username);
         Task<ServerResponse> CreateCompany(string name);
         Task<ClientCompany> GetClientCompanyByName(string name);
+        Task<Company> GetCompanyByName(string name);
+        Task<Company> GetCompanyByID(Guid id);
         Task<List<Company>> GetAllCompanies();
         Task<ServerResponse> DeleteUser(string id);
         Task<ServerResponse> DeleteCompany(string id);

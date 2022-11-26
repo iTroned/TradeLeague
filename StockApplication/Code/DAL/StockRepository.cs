@@ -254,12 +254,12 @@ namespace StockApplication.Code.DAL
         }
 
         //get company-entity with primary key
-        private async Task<Company> GetCompanyByID(Guid id)
+        public async Task<Company> GetCompanyByID(Guid id)
         {
             Company company = await _db.CompanySet.FindAsync(id); //return company-entity with given primary key values
             return company;
         }
-        private async Task<Company> GetCompanyByName(string name)
+        public async Task<Company> GetCompanyByName(string name)
         {
             Company[] coms = await _db.CompanySet.Where(p => p.name == name).ToArrayAsync(); //get array of User-entities with given username
             if (coms.Length == 1) //checking if there only exists 1 entity with current username

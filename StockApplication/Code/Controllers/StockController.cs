@@ -102,8 +102,8 @@ namespace StockApplication.Controllers
             User user = await _db.GetUserByUsername(username);
             if(user == null)
             {
-                _log.LogInformation(response.Response);
-                return BadRequest(response.Response);
+                _log.LogInformation(RESPONSE_userNotFound);
+                return NotFound(RESPONSE_userNotFound);
             }
             HttpContext.Session.SetString(SessionKeyUser, user.id.ToString());
 
@@ -146,7 +146,7 @@ namespace StockApplication.Controllers
         //gets a single company by its id
         public async Task<ActionResult> GetCompanyByName(string name)
         {
-            ClientCompany company = await _db.GetCompanyByName(name);
+            Company company = await _db.GetCompanyByName(name);
             if(company == null)
             {
                 _log.LogInformation(RESPONSE_companyNotFound);
